@@ -16,7 +16,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define EXIT_SUCCESS 0
+
 int main(int argc, char* argv[])
 {
-        return 0;
+        return EXIT_SUCCESS;
 }
