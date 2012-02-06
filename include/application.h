@@ -35,7 +35,7 @@ struct interupt {
         bool waiting;
 };
 
-struct menu_item {
+struct menu {
         void (*btn0)(void);
         void (*btn1)(void);
         void (*btn2)(void);
@@ -52,6 +52,7 @@ struct menu_item {
 
         char* top_line;
         char** messages;
+        int message_id;
 };
 
 int app_kbd_start(void);
