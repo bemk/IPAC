@@ -1,0 +1,167 @@
+THE NUT PROJECT CODING STYLE
+================================================================================
+
+In this project a certain coding style is desired. But first of, I ask you this.
+Download the GNU coding conventions, and print them. DO NOT READ THEM but BURN
+them as a symbolic gesture.
+
+Now of to the real coding conventions.
+
+
+Line width
+--------------------------------------------------------------------------------
+
+Most text editors have the option of placing a line at the 80th characters
+position. If it is not enabled by default, please do as it marks the maximum
+width of each line of code.
+
+The reason for 80 characters of width is chosen so that with indentation of 8
+characters, it will become evident that a helper function is needed after 3
+indentations. Also it makes it much easier to read the code.
+
+If the line width is exceeded, the function needs to be cut before the 80th
+space, and has to be end aligned to the 80th character.
+
+
+Indentation
+--------------------------------------------------------------------------------
+
+Indentation, a.k.a. tabs is used for making the code more readable. This in
+itself is great but only if everybody uses the same indentation levels. We have
+opted to go for 8 characters. Some people may argue for either 2 or 4 spaces,
+but believe me, when I say that when you have been staring at your screen for 6
+hours or more, clear indentation is starting to become appreciated.
+
+The argument against 8 characters is that it makes the line width too small too
+easily. However I feel that when exceeding 3 indentations, one might start
+wondering whether or not she/he needs a helper function for readability anyway.
+
+Also it helps keeping the complexity of the functions to a minimum.
+
+
+Curly braces
+--------------------------------------------------------------------------------
+
+Curly braces nearly always have the line to them selves. It is only in structure
+and enum definitions that this is not the case. In the case of a structure of
+enum the curly brace directly follows the definition. In the case of enums and
+structures any definitions are allowed on the same line as the closing curly
+brace.
+
+For example:
+
+int
+foo()
+{
+        bar++;
+        if (bar > 5)
+        {
+                bar = -5;
+        }
+        switch(foo)
+        {
+        case A:
+        case B:
+                break;
+        }
+}
+
+struct foo_bar {
+        int bear;
+};
+
+enum {
+        A,
+        B
+} foo;
+
+
+Function declarations:
+--------------------------------------------------------------------------------
+
+Function definitions are relatively tightly defined. To begin with the return
+type needs to be on its own line, then the function header follows, with the
+arguments on the very same line. If the arguments exceed 80 spaces either the
+old C function definition style can be chosen (which I personally prefer) or
+the line can be cut as required in the line width section.
+
+The curly braces both get their own line and the code within the function body
+has to be indented one level further than the function header.
+
+A simple example below:
+
+uint64_t
+foo_bar(struct free_speech_not_free* beer, struct free_speech_not_free*
+                                                               scottish_whiskey)
+{
+        return beer->size + scottish_whiskey->size;
+}
+
+or:
+
+uint64_t
+foo_bar(beer, scottish_whiskey)
+struct free_speech_not_free* beer;
+struct free_speech_not_free* scottish_whiskey;
+{
+        return beer->size + scottish_whiskey->size;
+}
+
+
+Conditional statements
+--------------------------------------------------------------------------------
+
+Conditional statements always have the line for them selves, and the curly
+braces following the statement also have a line to them selves. Curly braces are
+not used in case there is only one line in the conditional body.
+
+Never ever put a statement directly behind the if statement, unless you have
+something to hide.
+
+Also each conditional body is indented one level above its header.
+
+So it is:
+if (foo)
+        bar = foo;
+
+instead of
+if (foo) {bar = foo;} // U G L Y code
+
+
+Switches
+--------------------------------------------------------------------------------
+
+The layout to a switch statement is maybe a little different from other projects
+beside the Linux kernel, but because of the indentation style this is actually
+a more desired way.
+
+The switch statement has the line to itself again, and followed by the curly
+braces.
+
+cases are at the same level as the curly braces and the switch header, but all
+other code between the curly braces is indented one more level.
+
+cases always have a default condition which doesn't necessarily have to do
+anything.
+
+For example:
+
+switch(foo)
+{
+case A:
+        // Do something;
+        break;
+case B:
+        // Do some more;
+        break;
+default:
+}
+
+typedefs
+--------------------------------------------------------------------------------
+
+Typedefs aren't used regularly except for standard integer types, such as
+uint8_t, uint16_t and generic C library typedefs.
+
+Typedefs are nice for hiding details, but this fact might actually make it
+harder to figure out how to approach the variable in we're dealing with.
