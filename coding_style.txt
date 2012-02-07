@@ -7,6 +7,17 @@ them as a symbolic gesture.
 
 Now of to the real coding conventions.
 
+Commit messages
+--------------------------------------------------------------------------------
+
+When writing a commit message, it may be no longer than 80 characters, also it
+has to be preceded by the section in which the changes were made.
+
+E.g.
+menu: Added a time zone configuration menu.
+or
+gen: Updated the coding conventions to better reflect our experiences
+
 
 Line width
 --------------------------------------------------------------------------------
@@ -37,6 +48,10 @@ easily. However I feel that when exceeding 3 indentations, one might start
 wondering whether or not she/he needs a helper function for readability anyway.
 
 Also it helps keeping the complexity of the functions to a minimum.
+
+Also indentations are white spaces, not tab characters. Different editors have
+different ways of screwing those up so don't use them. Instead configure your
+editor to place 8 white spaces each time you hit tab.
 
 
 Curly braces
