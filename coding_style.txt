@@ -213,3 +213,26 @@ is wrong.
 
 Please write it as:
 int i = sizeof(struct foo_bar);
+
+When allocating data, the sizeof operator gets a dereferencing to the variable
+to allocate. For example:
+
+struct foo_bar* foo = malloc(sizeof(*foo));
+instead of
+struct foo_bar* foo = malloc(sizeof(struct foo_bar));
+
+
+Commenting
+--------------------------------------------------------------------------------
+
+For comments the C99 comments are forbidden. Use C89 comments instead.
+
+C99 = //
+C89 = /* */
+
+Comments should precede a function of which the name is not descriptive enough
+and even then the programmer might consider changing the name so that it is
+more intuitive.
+
+Functions referenced from other files are commented in the headerfiles and along
+with their parameters in the doxygen backslash notation.
