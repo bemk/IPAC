@@ -1,4 +1,7 @@
 THE NUT PROJECT CODING STYLE
+(C) Bart Kuivenhoven
+Creative Commons BY-SA
+http://creativecommons.org/licenses/by-sa/3.0/
 ================================================================================
 
 In this project a certain coding style is desired. But first of, I ask you this.
