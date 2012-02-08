@@ -172,7 +172,8 @@ case B:
 default:
 }
 
-typedefs
+
+Typedefs
 --------------------------------------------------------------------------------
 
 Typedefs aren't used regularly except for standard integer types, such as
@@ -180,3 +181,35 @@ uint8_t, uint16_t and generic C library typedefs.
 
 Typedefs are nice for hiding details, but this fact might actually make it
 harder to figure out how to approach the variable in we're dealing with.
+
+
+Pointers
+--------------------------------------------------------------------------------
+
+To keep things readable we're going to introduce some rules about pointer
+declaration and dereferencing.
+
+When the * is part of a pointer declaration it is attached to the type header,
+but when dereferencing it is touching the variable. When finding the address of
+a variable, it is part of the variable and thus is attached to the variable.
+
+A simple example:
+int* a = NULL;
+int b = 0;
+if (*a != NULL)
+        a = &b;
+
+
+Sizeof
+--------------------------------------------------------------------------------
+
+The sizeof operator doesn't have to use parenthesis, but not doing so might
+result in wrong interpretations by humans. To prevent this, the sizeof operator
+is always used in its function like form.
+
+So:
+int i = sizeof struct foo_bar;
+is wrong.
+
+Please write it as:
+int i = sizeof(struct foo_bar);
