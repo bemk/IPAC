@@ -239,3 +239,14 @@ more intuitive.
 
 Functions referenced from other files are commented in the headerfiles and along
 with their parameters in the doxygen backslash notation.
+
+
+Naming
+--------------------------------------------------------------------------------
+
+When naming types, variables and functions people sometimes want to put some
+form of abbreviation of the type in the name. Don't do this. Keep the names
+simple. The programmer knows what he's doing and if he doesn't know it, the
+compiler does.
+
+Don't use the hungarian notation!!!
