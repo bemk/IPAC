@@ -39,26 +39,55 @@ THREAD(light_backlight, arg)
  */
 THREAD(key_handle, arg)
 {
+        NutThreadSetPriority(10);
         for (;;)
         {
 //                 if (KbWaitForKeyEvent(1000) == KB_ERROR)
 //                         continue;
 
+                NutSleep(300);
                 int key_code = KbGetKey();
-                if (key_code != 0)
+                switch(key_code)
                 {
-                        btn_pushed();
-                        LcdChar('C');
-                        continue;
+                case KEY_01:
+                        LcdChar('1');
+                        break;
+                case KEY_02:
+                        LcdChar('2');
+                        break;
+                case KEY_03:
+                        LcdChar('3');
+                        break;
+                case KEY_04:
+                        LcdChar('4');
+                        break;
+                case KEY_05:
+                        LcdChar('5');
+                        break;
+                case KEY_ALT:
+                        LcdChar('A');
+                        break;
+                case KEY_ESC:
+                        LcdChar('E');
+                        break;
+                case KEY_UP:
+                        LcdChar('U');
+                        break;
+                case KEY_OK:
+                        LcdChar('O');
+                        break;
+                case KEY_LEFT:
+                        LcdChar('L');
+                        break;
+                case KEY_DOWN:
+                        LcdChar('D');
+                        break;
+                case KEY_RIGHT:
+                        LcdChar('R');
+                        break;
+                default:
+                        break;
                 }
-                NutMutexLock(&key_lock);
-                if (key_table[key_code] != NULL)
-                {
-                        btn_pushed();
-                        key_table[key_code]->handle();
-                }
-                NutMutexUnlock(&key_lock);
-                NutSleep(100);
         }
 }
 
@@ -91,7 +120,7 @@ int app_kbd_start()
 {
         NutMutexInit(&key_lock);
         NutMutexInit(&light_lock);
-       //NutThreadCreate("kbd_monitor", key_handle, NULL, 512);
+        NutThreadCreate("kbd_monitor", key_handle, NULL, 512);
         return 0;
 }
 
