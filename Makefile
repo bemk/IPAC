@@ -7,7 +7,7 @@ WINDOWS=windows
 all: $(WINDOWS)
 
 $(LINUX):
-	$(MAKE) -f Makefile.$(LINUX)
+	$(MAKE) -f Makefile.$(LINUX) linux
 
 $(WINDOWS):
 	$(MAKE) -f Makefile.$(WINDOWS)
