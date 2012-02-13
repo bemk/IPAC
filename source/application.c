@@ -25,45 +25,72 @@ THREAD(key_handle, arg)
                 }
                 NutSleep(250);
                 int key_code = KbGetKey();
-                if (key_code > 0 && key_code < 12)
+                if (key_code > 0 && key_code < 20)
                         i = 40;
+				if (mnu == NULL)
+					continue;
                 switch(key_code)
                 {
                 case KEY_01:
-                        LcdChar('1');
+						if (mnu->btn1 == NULL)
+								continue;
+						mnu->btn1(mnu);
                         break;
                 case KEY_02:
-                        LcdChar('2');
+						if (mnu->btn2 == NULL)
+								continue;
+						mnu->btn2(mnu);
                         break;
                 case KEY_03:
-                        LcdChar('3');
+						if (mnu->btn3 == NULL)
+							continue;
+						
+						mnu->btn3(mnu);
                         break;
                 case KEY_04:
-                        LcdChar('4');
+						if (mnu->btn4 == NULL)
+							continue;
+						mnu->btn4(mnu);
                         break;
                 case KEY_05:
-                        LcdChar('5');
+						if (mnu->btn5 == NULL)
+							continue;
+						mnu->btn5(mnu);
                         break;
                 case KEY_ALT:
-                        LcdChar('A');
+						if (mnu->btn_alt == NULL)
+							continue;
+						mnu->btn_alt(mnu);
                         break;
                 case KEY_ESC:
-                        LcdChar('E');
+						if (mnu->btn_esc == NULL)
+							continue;
+						mnu->btn_esc(mnu);
                         break;
                 case KEY_UP:
-                        LcdChar('U');
+						if (mnu->btn_up == NULL)
+							continue;
+						mnu->btn_up(mnu);
                         break;
                 case KEY_OK:
-                        LcdChar('O');
+						if (mnu->btn_ok == NULL)
+							continue;
+						mnu->btn_ok(mnu);
                         break;
                 case KEY_LEFT:
-                        LcdChar('L');
+						if (mnu->btn_left == NULL)
+							continue;
+						mnu->btn_left(mnu);
                         break;
                 case KEY_DOWN:
-                        LcdChar('D');
+						if (mnu->btn_down == NULL)
+							continue;
+						mnu->btn_down(mnu);
                         break;
                 case KEY_RIGHT:
-                        LcdChar('R');
+						if (mnu->btn_right == NULL)
+							continue;
+						mnu->btn_right(mnu);
                         break;
                 default:
                         break;

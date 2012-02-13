@@ -60,6 +60,10 @@ struct menu {
         int no_messages;
 };
 
+int std_mnu_init(void);
+
+extern struct menu *mnu;
+
 #ifdef __cplusplus
 }
 #endif
