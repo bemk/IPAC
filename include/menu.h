@@ -50,14 +50,20 @@ struct menu {
          * \brief The itterating (scrolling) messages
          * \var message_id
          * \brief Which itterating message is currently visible
+<<<<<<< HEAD
          * \var no_messages
          * \brief How many messages do we have
+=======
+>>>>>>> f8a07e6... mnu: Made a menu item data structure (with Remy)
          */
 
         char* top_line;
         char** messages;
         int message_id;
+<<<<<<< HEAD
         int no_messages;
+=======
+>>>>>>> f8a07e6... mnu: Made a menu item data structure (with Remy)
 };
 
 #ifdef __cplusplus
