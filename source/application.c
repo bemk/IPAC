@@ -91,7 +91,7 @@ int app_kbd_start()
 {
         NutMutexInit(&key_lock);
         NutMutexInit(&light_lock);
-        NutThreadCreate("kbd_monitor", key_handle, NULL, 512);
+       //NutThreadCreate("kbd_monitor", key_handle, NULL, 512);
         return 0;
 }
 
