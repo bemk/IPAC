@@ -1,7 +1,16 @@
 #include "application.h"
 #include "menu.h"
 #include <sys/heap.h>
-#include <string.h>
+
+char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
+				  "14","15","16","17","18","19","20","21","22","23"};
+
+void mem_set(void* dst, int c, int size)
+{
+	char* tmp = dst;
+	for (; size > 0; size--, tmp = (void*)((unsigned int)tmp++))
+		tmp = (c & 0xFF);
+}
 
 struct menu *mnu = NULL;
 
@@ -48,19 +57,38 @@ void std_btn_down(struct menu* this)
 void std_btn_left(struct menu* this)
 {
 		if (this->parent_ctor != NULL)
-			this->parent_ctor(this);
+			this->parent_ctor();
 }
 
 void std_btn_right(struct menu* this)
 {
+		switch(mnu->message_id)
+		{
+			case 0:
+				tz_menu_init();
+				break;
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				break;
+			default:
+				break;
+		}
 }
 
-int std_mnu_init()
+void std_mnu_init()
 {
-	mnu = malloc(sizeof(struct menu));
+	if (mnu == NULL)
+		mnu = malloc(sizeof(*mnu));
 	if (mnu == NULL)
 		return -1;
-	//memset(mnu, 0, sizeof(struct menu));
+	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Menu";
 	mnu->messages[0] = "text";
 	mnu->messages[1] = "Hello world!";
@@ -69,7 +97,17 @@ int std_mnu_init()
 	
 	mnu->btn_up = std_btn_up;
 	mnu->btn_down = std_btn_down;
+	mnu->btn_right = std_btn_right;
 	
 	NutThreadCreate("Menu", mnu_thread, NULL, 512);
-	return 0;
+}
+
+void tz_menu_init()
+{
+	if (mnu == NULL)
+		return;
+	memset(mnu, 0, sizeof(struct menu));
+	mnu->top_line = "Time zone";
+	mnu->messages[0] = "UTC + %";
+	mnu->parent_ctor = std_mnu_init;
 }
