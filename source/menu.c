@@ -1,7 +1,6 @@
 #include "application.h"
 #include "menu.h"
 
-<<<<<<< HEAD
 /**
  * \fn std_btn_up
  * \brief Standard move up in the current menu
@@ -36,5 +35,3 @@ void std_btn_left(struct menu* this)
 void std_btn_right(struct menu* this)
 {
 }
-=======
->>>>>>> f8a07e6... mnu: Made a menu item data structure (with Remy)
