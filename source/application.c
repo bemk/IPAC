@@ -4,9 +4,6 @@
 int btn_pushed(void);
 int app_kbd_start(void);
 
-MUTEX key_lock;
-MUTEX light_lock;
-struct interupt* key_table[12];
 
 /**
  * \fn key_handle
@@ -75,34 +72,11 @@ THREAD(key_handle, arg)
 }
 
 /**
- * \fn app_kbd_update_keys
- * \brief Is used to import a new set of function pointers to the table
- * \param new_map
- * \brief The pointer to the new table, gets copied so keep track!
- */
-int app_kbd_update_keys(struct interupt** new_map)
-{
-        NutMutexLock(&key_lock);
-
-        int i = 0;
-
-        for (; i < 12; i++)
-        {
-                key_table[i] = new_map[i];
-        }
-
-        NutMutexUnlock(&key_lock);
-        return 0;
-}
-
-/**
  * \fn app_kbd_start
  * \brief This starts the thread which handles the keyboard events
  */
 int app_kbd_start()
 {
-        NutMutexInit(&key_lock);
-        NutMutexInit(&light_lock);
         NutThreadCreate("kbd_monitor", key_handle, NULL, 512);
         return 0;
 }
