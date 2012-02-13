@@ -90,7 +90,7 @@ void std_mnu_init()
 		return -1;
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Menu";
-	mnu->messages[0] = "text";
+	mnu->messages[0] = "Time zones";
 	mnu->messages[1] = "Hello world!";
 	mnu->no_messages = 2;
 	mnu->message_id = 0;
@@ -110,4 +110,5 @@ void tz_menu_init()
 	mnu->top_line = "Time zone";
 	mnu->messages[0] = "UTC + %";
 	mnu->parent_ctor = std_mnu_init;
+	mnu->btn_left = std_btn_left;
 }
