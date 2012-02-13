@@ -9,29 +9,6 @@ MUTEX light_lock;
 struct interupt* key_table[12];
 
 /**
- * \fn light_backlight
- * \brief A thred used to light the backlight for 10 seconds
- * \param arg
- * \brief Pointer to the (unused) arguments
- */
-THREAD(light_backlight, arg)
-{
-        if (NutMutexTrylock(&light_lock) != 0)
-        {
-                NutThreadExit();
-                for (;;);
-        }
-
-        LcdBackLight(LCD_BACKLIGHT_ON);
-        NutSleep(10000);
-        LcdBackLight(LCD_BACKLIGHT_OFF);
-
-        NutMutexUnlock(&light_lock);
-
-        NutThreadExit();
-        for(;;); // Keep compiler from complaining
-}
-/**
  * \fn key_handle
  * \brief The thread to scan for key events and handle them when occuring
  * \param arg
@@ -40,13 +17,19 @@ THREAD(light_backlight, arg)
 THREAD(key_handle, arg)
 {
         NutThreadSetPriority(10);
+        int i = 0;
         for (;;)
         {
-//                 if (KbWaitForKeyEvent(1000) == KB_ERROR)
-//                         continue;
-
-                NutSleep(300);
+                LcdBackLight(LCD_BACKLIGHT_OFF);
+                if (i > 0)
+                {
+                        LcdBackLight(LCD_BACKLIGHT_ON);
+                        i--;
+                }
+                NutSleep(250);
                 int key_code = KbGetKey();
+                if (key_code > 0 && key_code < 12)
+                        i = 40;
                 switch(key_code)
                 {
                 case KEY_01:
@@ -121,15 +104,5 @@ int app_kbd_start()
         NutMutexInit(&key_lock);
         NutMutexInit(&light_lock);
         NutThreadCreate("kbd_monitor", key_handle, NULL, 512);
-        return 0;
-}
-
-/**
- * \fn btn_pushed
- * \brief Gets called when the backlight needs to be lit
- */
-int btn_pushed()
-{
-        NutThreadCreate("bkg_light", light_backlight, NULL, 256);
         return 0;
 }
