@@ -9,6 +9,7 @@ char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
 				  "14","15","16","17","18","19","20","21","22","23"};
 
 struct menu *mnu = NULL;
+bool msg_updated = TRUE;
 
 THREAD(mnu_thread, args)
 {
@@ -18,9 +19,11 @@ THREAD(mnu_thread, args)
 		NutSleep(100);
 		if (mnu == NULL)
 			continue;
-		reset();
-		LcdWriteLine1(mnu->top_line);
-		LcdWriteLine2(mnu->messages[mnu->message_id]);
+                if (msg_updated)
+                {
+                        LcdWriteLine1(mnu->top_line);
+                        LcdWriteLine2(mnu->messages[mnu->message_id]);
+                }
 	}
 }
 
@@ -33,6 +36,7 @@ static void tz_btn_up(struct menu* this)
         this->mnu_cnt++;
         if (this->mnu_cnt >= 24)
                 this->mnu_cnt = 0;
+        msg_updated = TRUE;
 }
 
 /**
@@ -45,6 +49,7 @@ static void tz_btn_down(struct menu* this)
         this->mnu_cnt--;
         if  (this->mnu_cnt < 0)
              this->mnu_cnt = 23;
+        msg_updated = TRUE;
 }
 
 /**
@@ -56,6 +61,7 @@ static void std_btn_up(struct menu* this)
         this->message_id++;
         if(this->message_id >= this->no_messages)
                 this->message_id = 0;
+        msg_updated = TRUE;
 }
 
 /**
@@ -67,6 +73,7 @@ static void std_btn_down(struct menu* this)
         this->message_id--;
         if(this->message_id < 0)
                 this->message_id = this->no_messages-1;
+        msg_updated = TRUE;
 }
 
 /**
@@ -76,7 +83,8 @@ static void std_btn_down(struct menu* this)
 static void std_btn_left(struct menu* this)
 {
 		if (this->parent_ctor != NULL)
-			this->parent_ctor();
+                        this->parent_ctor();
+                msg_updated = TRUE;
 }
 
 static void std_btn_right(struct menu* this)
@@ -103,7 +111,8 @@ static void std_btn_right(struct menu* this)
 			break;
 		default:
 			break;
-		}
+                }
+                msg_updated = TRUE;
 }
 
 static void std_mnu_build()
@@ -143,9 +152,9 @@ static void tz_menu_init()
 	mnu->top_line = "Time zone";
 	mnu->messages[0] = "UTC + %";
 	mnu->parent_ctor = std_mnu_build;
-    mnu->btn_left = std_btn_left;
-    mnu->btn_down = tz_btn_down;
-    mnu->btn_up = tz_btn_up;
+        mnu->btn_left = std_btn_left;
+        mnu->btn_down = tz_btn_down;
+        mnu->btn_up = tz_btn_up;
 }
 
 static void klok_menu_init()
