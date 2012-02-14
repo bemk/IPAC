@@ -8,6 +8,7 @@ static void entertainment_menu_init();
 static void alarm_menu_init();
 static void stream_menu_init();
 static void sd_menu_init();
+static void set_alarm_menu();
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
 				  "14","15","16","17","18","19","20","21","22","23"};
@@ -47,7 +48,6 @@ static void tz_btn_up(struct menu* this)
  * \fn tz_btn_down
  * \brief
  */
-
 static void tz_btn_down(struct menu* this)
 {
         this->mnu_cnt--;
@@ -86,66 +86,84 @@ static void std_btn_down(struct menu* this)
  */
 static void std_btn_left(struct menu* this)
 {
-		if (this->parent_ctor != NULL)
-                        this->parent_ctor();
+        if (this->parent_ctor != NULL)
+                this->parent_ctor();
                 msg_updated = TRUE;
 }
 
 static void std_btn_right(struct menu* this)
 {
-		switch(mnu->message_id)
-		{
-		case 0:
-			tz_menu_init();
-			break;
-		case 1:
-			klok_menu_init();
-			break;
-		case 2:
-			entertainment_menu_init();
-			break;
-		case 3:
-			alarm_menu_init();
-			break;
-                case 4:
-                        stream_menu_init();
-                        break;                       
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-			break;
-		default:
-			break;
-                }
-                msg_updated = TRUE;
+	switch(mnu->message_id)
+	{
+	case 0:
+		tz_menu_init();
+		break;
+	case 1:
+		klok_menu_init();
+		break;
+	case 2:
+		entertainment_menu_init();
+		break;
+	case 3:
+		alarm_menu_init();
+		break;
+        case 4:
+                stream_menu_init();    
+                break;                       
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+		break;
+	default:
+		break;
+        }
+        msg_updated = TRUE;
 }
 
 static void std_entertainment_btn_right(struct menu* this)
 {
-		switch(mnu->message_id)
-		{
-		case 0:
-			stream_menu_init();
-			break;
-		case 1:
-                        sd_menu_init();
-                        break;
-		case 2:
-		case 3:
-                case 4:                     
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-			break;
-		default:
-			break;
-		}
+	switch(mnu->message_id)
+	{
+	case 0:
+		stream_menu_init();
+		break;
+	case 1:
+                sd_menu_init();
+                break;
+	case 2:
+	case 3:
+        case 4:                     
+	case 5:
+	case 6:
+	case 7:
+        case 8:
+	case 9:
+		break;
+	default:
+		break;
+	}
 }
 
+static void alarm_btn_right(struct menu* this)
+{
+        switch(mnu->message_id)
+        {
+        case 0:
+                set_alarm_menu();
+                break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+                break;
+        default:
+                break;
+        }
+}
 
 static void std_mnu_build()
 {
@@ -169,9 +187,7 @@ void std_mnu_init()
 		mnu = malloc(sizeof(*mnu));
 	if (mnu == NULL)
 		return -1;
-
 	std_mnu_build();
-
 	NutThreadCreate("Menu", mnu_thread, NULL, 512);
 }
 
@@ -230,6 +246,7 @@ void alarm_menu_init()
 	mnu->btn_left = std_btn_left;
 	mnu->btn_up = std_btn_up;
 	mnu->btn_down = std_btn_down;
+        mnu->btn_right = alarm_btn_right;
 }
 
 static void stream_menu_init()
@@ -241,7 +258,6 @@ static void stream_menu_init()
 	mnu->messages[0] = "Stream";
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
-        
 }
 
 static void sd_menu_init()
@@ -253,6 +269,16 @@ static void sd_menu_init()
 	mnu->messages[0] = "bestand kiezen";
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
-        
 }
 
+static void set_alarm_menu()
+{
+        if(mnu == NULL)
+                return;
+        memset(mnu,0, sizeof(struct menu));
+        mnu->top_line = "Set Alarm";
+        mnu->messages[0] = "HH:MM";
+        mnu->no_messages = 1 ;
+        mnu->parent_ctor = alarm_menu_init;
+        mnu->btn_left = std_btn_left;
+}
