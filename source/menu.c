@@ -83,23 +83,26 @@ static void std_btn_right(struct menu* this)
 {
 		switch(mnu->message_id)
 		{
-			case 0:
-				tz_menu_init();
-				break;
-			case 1:
-				klok_menu_init();
-				break;
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-			case 9:
-				break;
-			default:
-				break;
+		case 0:
+			tz_menu_init();
+			break;
+		case 1:
+			klok_menu_init();
+			break;
+		case 2:
+			entertainment_menu_init();
+			break;
+		case 3:
+			alarm_menu_init();
+			break;
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+			break;
+		default:
+			break;
 		}
 }
 
@@ -109,8 +112,11 @@ static void std_mnu_build()
 	mnu->top_line = "Menu";
 	mnu->messages[0] = "Time zones";
 	mnu->messages[1] = "Klok instellen";
-	mnu->no_messages = 2;
+	mnu->messages[2] = "Entertainment"; 
+	mnu->messages[3] = "Alarm";
+	mnu->no_messages = 4;
 	mnu->message_id = 0;
+	
 
 	mnu->btn_up = std_btn_up;
 	mnu->btn_down = std_btn_down;
@@ -137,9 +143,9 @@ static void tz_menu_init()
 	mnu->top_line = "Time zone";
 	mnu->messages[0] = "UTC + %";
 	mnu->parent_ctor = std_mnu_build;
-        mnu->btn_left = std_btn_left;
-        mnu->btn_down = tz_btn_down;
-        mnu->btn_up = tz_btn_up;
+    mnu->btn_left = std_btn_left;
+    mnu->btn_down = tz_btn_down;
+    mnu->btn_up = tz_btn_up;
 }
 
 static void klok_menu_init()
@@ -151,4 +157,36 @@ static void klok_menu_init()
 	mnu->messages[0] = "De tijd";
 	mnu->parent_ctor = std_mnu_build;
 	mnu->btn_left = std_btn_left;
+}
+
+void entertainment_menu_init()
+{
+	if(mnu == NULL)
+		return;
+	memset(mnu, 0, sizeof(struct menu));
+	mnu->top_line = "Entertainment";
+	mnu->messages[0] = "Internet Radio";
+	mnu->messages[1] = "SD music";
+	mnu->no_messages = 2 ;
+	
+	mnu->parent_ctor = std_mnu_build;
+	mnu->btn_left = std_btn_left;
+	mnu->btn_up = std_btn_up;
+	mnu->btn_down = std_btn_down;
+}
+
+void alarm_menu_init()
+{
+	if(mnu == NULL)
+		return;
+	memset(mnu,0, sizeof(struct menu));
+	mnu->top_line = "Alarm";
+	mnu->messages[0] = "Set alarm";
+	mnu->messages[1] = "Set ON/OFF";
+	mnu->no_messages = 2 ;
+	
+	mnu->parent_ctor = std_mnu_build;
+	mnu->btn_left = std_btn_left;
+	mnu->btn_up = std_btn_up;
+	mnu->btn_down = std_btn_down;
 }
