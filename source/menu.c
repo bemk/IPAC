@@ -25,6 +25,29 @@ THREAD(mnu_thread, args)
 }
 
 /**
+ * \fn tz_btn_up
+ * \brief What will happen when we push the button up in the timezone menu
+ */
+static void tz_btn_up(struct menu* this)
+{
+        this->mnu_cnt++;
+        if (this->mnu_cnt >= 24)
+                this->mnu_cnt = 0;
+}
+
+/**
+ * \fn tz_btn_down
+ * \brief
+ */
+
+static void tz_btn_down(struct menu* this)
+{
+        this->mnu_cnt--;
+        if  (this->mnu_cnt < 0)
+             this->mnu_cnt = 23;
+}
+
+/**
  * \fn std_btn_up
  * \brief Standard move up in the current menu
  */
@@ -88,7 +111,7 @@ static void std_mnu_build()
 	mnu->messages[1] = "Klok instellen";
 	mnu->no_messages = 2;
 	mnu->message_id = 0;
-	
+
 	mnu->btn_up = std_btn_up;
 	mnu->btn_down = std_btn_down;
 	mnu->btn_right = std_btn_right;
@@ -100,9 +123,9 @@ void std_mnu_init()
 		mnu = malloc(sizeof(*mnu));
 	if (mnu == NULL)
 		return -1;
-	
+
 	std_mnu_build();
-	
+
 	NutThreadCreate("Menu", mnu_thread, NULL, 512);
 }
 
@@ -114,7 +137,9 @@ static void tz_menu_init()
 	mnu->top_line = "Time zone";
 	mnu->messages[0] = "UTC + %";
 	mnu->parent_ctor = std_mnu_build;
-	mnu->btn_left = std_btn_left;
+        mnu->btn_left = std_btn_left;
+        mnu->btn_down = tz_btn_down;
+        mnu->btn_up = tz_btn_up;
 }
 
 static void klok_menu_init()
