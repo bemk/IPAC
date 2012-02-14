@@ -42,6 +42,7 @@ struct menu {
          * \brief When we need to go one menu up, we call this function
          */
         void (*parent_ctor)(void);
+        void (*std_child_ctor)(void);
 
         /**
          * \var top_line
