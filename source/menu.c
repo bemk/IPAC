@@ -29,6 +29,7 @@ THREAD(mnu_thread, args)
                 {
                         LcdWriteLine1(mnu->top_line);
                         LcdWriteLine2(mnu->messages[mnu->message_id]);
+                        msg_updated = FALSE;
                 }
 	}
 }
@@ -109,8 +110,8 @@ static void std_btn_right(struct menu* this)
 		alarm_menu_init();
 		break;
         case 4:
-                stream_menu_init();    
-                break;                       
+                stream_menu_init();
+                break;
 	case 5:
 	case 6:
 	case 7:
@@ -135,7 +136,7 @@ static void std_entertainment_btn_right(struct menu* this)
                 break;
 	case 2:
 	case 3:
-        case 4:                     
+        case 4:
 	case 5:
 	case 6:
 	case 7:
@@ -145,6 +146,7 @@ static void std_entertainment_btn_right(struct menu* this)
 	default:
 		break;
 	}
+	msg_updated = TRUE;
 }
 
 static void alarm_btn_right(struct menu* this)
@@ -164,6 +166,7 @@ static void alarm_btn_right(struct menu* this)
         default:
                 break;
         }
+        msg_updated = TRUE;
 }
 static void std_play_btn_right(struct menu* this)
 {
