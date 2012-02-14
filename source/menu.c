@@ -9,9 +9,10 @@ static void alarm_menu_init();
 static void stream_menu_init();
 static void sd_menu_init();
 static void set_alarm_menu();
+static void play_menu_init();
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
-				  "14","15","16","17","18","19","20","21","22","23"};
+                        "14","15","16","17","18","19","20","21","22","23"};
 
 struct menu *mnu = NULL;
 bool msg_updated = TRUE;
@@ -164,6 +165,27 @@ static void alarm_btn_right(struct menu* this)
                 break;
         }
 }
+static void std_play_btn_right(struct menu* this)
+{
+	switch(mnu->message_id)
+	{
+	case 0:
+                play_menu_init();
+                break;
+	case 1:
+	case 2:
+	case 3:
+        case 4:                     
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+		break;
+	default:
+		break;
+	}
+}
 
 static void std_mnu_build()
 {
@@ -258,6 +280,8 @@ static void stream_menu_init()
 	mnu->messages[0] = "Stream";
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
+        mnu->btn_right = std_play_btn_right;
+        
 }
 
 static void sd_menu_init()
@@ -269,6 +293,8 @@ static void sd_menu_init()
 	mnu->messages[0] = "bestand kiezen";
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
+        mnu->btn_right = std_play_btn_right;
+        
 }
 
 static void set_alarm_menu()
@@ -281,4 +307,14 @@ static void set_alarm_menu()
         mnu->no_messages = 1 ;
         mnu->parent_ctor = alarm_menu_init;
         mnu->btn_left = std_btn_left;
+}
+static void play_menu_init()
+{
+        if(mnu == NULL)
+		return;
+	memset(mnu, 0, sizeof(struct menu));
+	mnu->top_line = "Music is playing";
+	mnu->messages[0] = "Artist - Title";
+	mnu->parent_ctor = entertainment_menu_init;
+	mnu->btn_left = std_btn_left;
 }
