@@ -27,70 +27,69 @@ THREAD(key_handle, arg)
                 int key_code = KbGetKey();
                 if (key_code > 0 && key_code < 20)
                         i = 40;
-				if (mnu == NULL)
-					continue;
+                        if (mnu == NULL)
+                                continue;
                 switch(key_code)
                 {
                 case KEY_01:
-						if (mnu->btn1 == NULL)
-								continue;
-						mnu->btn1(mnu);
+                        if (mnu->btn1 == NULL)
+                                continue;
+                        mnu->btn1(mnu);
                         break;
                 case KEY_02:
-						if (mnu->btn2 == NULL)
-								continue;
-						mnu->btn2(mnu);
+                        if (mnu->btn2 == NULL)
+                                continue;
+                        mnu->btn2(mnu);
                         break;
                 case KEY_03:
-						if (mnu->btn3 == NULL)
-							continue;
-						
-						mnu->btn3(mnu);
+                        if (mnu->btn3 == NULL)
+                                continue;
+                        mnu->btn3(mnu);
                         break;
                 case KEY_04:
-						if (mnu->btn4 == NULL)
-							continue;
-						mnu->btn4(mnu);
+                        if (mnu->btn4 == NULL)
+                                continue;
+                        mnu->btn4(mnu);
                         break;
                 case KEY_05:
-						if (mnu->btn5 == NULL)
-							continue;
-						mnu->btn5(mnu);
+                        if (mnu->btn5 == NULL)
+                                continue;
+                        mnu->btn5(mnu);
                         break;
                 case KEY_ALT:
-						if (mnu->btn_alt == NULL)
-							continue;
-						mnu->btn_alt(mnu);
+                        if (mnu->btn_alt == NULL)
+                                continue;
+                        mnu->btn_alt(mnu);
                         break;
                 case KEY_ESC:
-						if (mnu->btn_esc == NULL)
-							continue;
-						mnu->btn_esc(mnu);
+                        if (mnu->btn_esc == NULL)
+                                continue;
+                        mnu->btn_esc(mnu);
                         break;
                 case KEY_UP:
-						if (mnu->btn_up == NULL)
-							continue;
-						mnu->btn_up(mnu);
+                        if (mnu->btn_up == NULL)
+                                continue;
+                        mnu->btn_up(mnu);
                         break;
                 case KEY_OK:
-						if (mnu->btn_ok == NULL)
-							continue;
-						mnu->btn_ok(mnu);
+                        if (mnu->btn_ok == NULL)
+                                continue;
+                        mnu->btn_ok(mnu);
                         break;
                 case KEY_LEFT:
-						if (mnu->btn_left == NULL)
-							continue;
-						mnu->btn_left(mnu);
+                        if (mnu->btn_left == NULL)
+                                continue;
+                        mnu->btn_left(mnu);
                         break;
                 case KEY_DOWN:
-						if (mnu->btn_down == NULL)
-							continue;
-						mnu->btn_down(mnu);
+                        if (mnu->btn_down == NULL)
+                                continue;
+                        mnu->btn_down(mnu);
                         break;
                 case KEY_RIGHT:
-						if (mnu->btn_right == NULL)
-							continue;
-						mnu->btn_right(mnu);
+                        if (mnu->btn_right == NULL)
+                                continue;
+                        mnu->btn_right(mnu);
                         break;
                 default:
                         break;
