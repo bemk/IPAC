@@ -158,7 +158,6 @@ static void std_mnu_build()
 	mnu->no_messages = 4;
 	mnu->message_id = 0;
 
-
 	mnu->btn_up = std_btn_up;
 	mnu->btn_down = std_btn_down;
 	mnu->btn_right = std_btn_right;
