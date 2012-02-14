@@ -68,6 +68,8 @@ void std_btn_right(struct menu* this)
 				tz_menu_init();
 				break;
 			case 1:
+				klok_menu_init();
+				break;
 			case 2:
 			case 3:
 			case 4:
@@ -91,7 +93,7 @@ void std_mnu_init()
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Menu";
 	mnu->messages[0] = "Time zones";
-	mnu->messages[1] = "Hello world!";
+	mnu->messages[1] = "Klok instellen";
 	mnu->no_messages = 2;
 	mnu->message_id = 0;
 	
@@ -109,6 +111,17 @@ void tz_menu_init()
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Time zone";
 	mnu->messages[0] = "UTC + %";
+	mnu->parent_ctor = std_mnu_init;
+	mnu->btn_left = std_btn_left;
+}
+
+void klok_menu_init()
+{
+	if(mnu == NULL)
+		return;
+	memset(mnu, 0, sizeof(struct menu));
+	mnu->top_line = "Klok";
+	mnu->messages[0] = "De tijd";
 	mnu->parent_ctor = std_mnu_init;
 	mnu->btn_left = std_btn_left;
 }
