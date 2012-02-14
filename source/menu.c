@@ -112,11 +112,11 @@ static void std_mnu_build()
 	mnu->top_line = "Menu";
 	mnu->messages[0] = "Time zones";
 	mnu->messages[1] = "Klok instellen";
-	mnu->messages[2] = "Entertainment"; 
+	mnu->messages[2] = "Entertainment";
 	mnu->messages[3] = "Alarm";
 	mnu->no_messages = 4;
 	mnu->message_id = 0;
-	
+
 
 	mnu->btn_up = std_btn_up;
 	mnu->btn_down = std_btn_down;
@@ -168,7 +168,7 @@ void entertainment_menu_init()
 	mnu->messages[0] = "Internet Radio";
 	mnu->messages[1] = "SD music";
 	mnu->no_messages = 2 ;
-	
+
 	mnu->parent_ctor = std_mnu_build;
 	mnu->btn_left = std_btn_left;
 	mnu->btn_up = std_btn_up;
@@ -184,7 +184,7 @@ void alarm_menu_init()
 	mnu->messages[0] = "Set alarm";
 	mnu->messages[1] = "Set ON/OFF";
 	mnu->no_messages = 2 ;
-	
+
 	mnu->parent_ctor = std_mnu_build;
 	mnu->btn_left = std_btn_left;
 	mnu->btn_up = std_btn_up;
