@@ -2,16 +2,17 @@
 #include "menu.h"
 #include <sys/heap.h>
 
-static void tz_menu_init();
-static void klok_menu_init();
-static void entertainment_menu_init();
-static void alarm_menu_init();
-static void stream_menu_init();
-static void sd_menu_init();
-static void set_alarm_menu();
-static void play_menu_init();
-static void beep_menu_init();
-static void save_menu_init();
+static void tz_menu_init(void);
+static void klok_menu_init(void);
+static void entertainment_menu_init(void);
+static void alarm_menu_init(void);
+static void stream_menu_init(void);
+static void sd_menu_init(void);
+static void set_alarm_menu(void);
+static void play_menu_init(void);
+static void beep_menu_init(void);
+static void save_menu_init(void);
+static void std_mnu_build(void);
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
                         "14","15","16","17","18","19","20","21","22","23"};
@@ -239,7 +240,8 @@ void std_mnu_init()
 	if (mnu == NULL)
 		mnu = malloc(sizeof(*mnu));
 	if (mnu == NULL)
-		return -1;
+		return;
+
 	std_mnu_build();
 	NutThreadCreate("Menu", mnu_thread, NULL, 512);
 }
@@ -315,7 +317,7 @@ static void stream_menu_init()
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
         mnu->btn_right = /*std_play_btn_right*/std_alarm_stream_right;
-        
+
 }
 
 static void sd_menu_init()
@@ -329,7 +331,7 @@ static void sd_menu_init()
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
         mnu->btn_right = std_play_btn_right;
-        
+
 }
 
 static void set_alarm_menu()

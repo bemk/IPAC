@@ -6,8 +6,6 @@ extern "C" {
 #endif
 
 typedef enum {false, true} bool;
-#define TRUE true
-#define FALSE false
 
 #ifdef __cplusplus
 }
