@@ -25,7 +25,7 @@ THREAD(mnu_thread, args)
 	NutThreadSetPriority(10);
 	for (;;)
 	{
-		NutSleep(100);
+		NutSleep(THREAD_SLEEP_TIME);
 		if (mnu == NULL)
 			continue;
                 if (msg_updated)

@@ -23,7 +23,7 @@ THREAD(key_handle, arg)
                         LcdBackLight(LCD_BACKLIGHT_ON);
                         i--;
                 }
-                NutSleep(100);
+                NutSleep(THREAD_SLEEP_TIME);
                 int key_code = KbGetKey();
                 if (key_code > 0 && key_code < 20)
                         i = 40;

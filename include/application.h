@@ -30,6 +30,8 @@
 extern "C" {
 #endif
 
+#define THREAD_SLEEP_TIME 150
+
 struct interupt {
         void (*handle)(void);
         bool waiting;
