@@ -3,7 +3,7 @@
 
 int btn_pushed(void);
 int app_kbd_start(void);
-
+bool double_pressed = false;
 
 /**
  * \fn key_handle
@@ -23,12 +23,16 @@ THREAD(key_handle, arg)
                         LcdBackLight(LCD_BACKLIGHT_ON);
                         i--;
                 }
-                NutSleep(50);
+                NutSleep(100);
                 int key_code = KbGetKey();
                 if (key_code > 0 && key_code < 20)
                         i = 40;
                         if (mnu == NULL)
                                 continue;
+		if (!double_pressed)
+		{
+			double_pressed = true;
+		}
                 switch(key_code)
                 {
                 case KEY_01:
@@ -94,6 +98,7 @@ THREAD(key_handle, arg)
                 default:
                         break;
                 }
+		double_pressed = false;
         }
 }
 
