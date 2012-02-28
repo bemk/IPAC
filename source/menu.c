@@ -30,6 +30,8 @@ THREAD(mnu_thread, args)
 		NutSleep(THREAD_SLEEP_TIME);
 		if (mnu == NULL)
 			continue;
+                if (mnu->show_time)
+                        LcdWriteLine2(getTime());
                 if (msg_updated)
                 {
                         LcdWriteLine1(mnu->top_line);
@@ -300,10 +302,9 @@ static void klok_menu_init()
 		return;
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Klok";
-	mnu->messages[0] = "%t";
-        mnu->no_messages = 1;
 	mnu->parent_ctor = std_mnu_build;
 	mnu->btn_left = std_btn_left;
+        mnu->show_time = true;
 }
 
 void entertainment_menu_init()

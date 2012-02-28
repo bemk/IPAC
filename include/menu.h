@@ -59,7 +59,8 @@ struct menu {
         char* messages[10];
         int message_id;
         int no_messages;
-		int mnu_cnt;
+        int mnu_cnt;
+        bool show_time;
 };
 
 void std_mnu_init(void);
