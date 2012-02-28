@@ -320,12 +320,12 @@ static void tz_menu_init()
 
 static void klok_menu_init()
 {
-	if(mnu == NULL)
-		return;
-	memset(mnu, 0, sizeof(struct menu));
-	mnu->top_line = "Klok";
-	mnu->parent_ctor = std_mnu_build;
-	mnu->btn_left = std_btn_left;
+        if(mnu == NULL)
+                return;
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Klok";
+        std_mnu_prepare(mnu);
+        mnu->parent_ctor = std_mnu_build;
         mnu->show_time = true;
 }
 
