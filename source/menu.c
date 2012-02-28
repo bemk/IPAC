@@ -13,6 +13,7 @@ static void set_alarm_menu(void);
 static void play_menu_init(void);
 static void beep_menu_init(void);
 static void save_menu_init(void);
+static void alarm_type_menu_init(void);
 static void std_mnu_build(void);
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
@@ -148,8 +149,9 @@ static void std_entertainment_btn_right(struct menu* this)
 }
 
 static void std_alarm_right(struct menu* this)
-{
-        switch(mnu->message_id)
+{/*save_menu_init needs 3 items*/
+        alarm_type_menu_init();
+        /*switch(mnu->message_id)
         {
         case 0:
                 stream_menu_init();
@@ -164,7 +166,35 @@ static void std_alarm_right(struct menu* this)
         case 2:
                 beep_menu_init();
                 mnu->parent_ctor = alarm_menu_init;
+                mnu->std_child_ctor = beep_menu_init;
+                break;
+        default:
+                break;
+        }*/
+        msg_updated = TRUE;
+}
+
+static void std_save_right(struct menu* this)
+{
+        switch(mnu->message_id)
+        {
+        case 0:
+                stream_menu_init();
+                mnu->parent_ctor = set_alarm_menu;
+                /*mnu->parent_ctor = alarm_type_menu_init;*/
                 mnu->std_child_ctor = save_menu_init;
+                break;
+        case 1:
+                sd_menu_init();
+                mnu->parent_ctor = set_alarm_menu;
+                /*mnu->parent_ctor = alarm_type_menu_init;*/
+                mnu->std_child_ctor = save_menu_init;
+                break;
+        case 2:
+                beep_menu_init();
+                mnu->parent_ctor = set_alarm_menu;
+                /*mnu->parent_ctor = alarm_type_menu_init;*/
+                mnu->std_child_ctor = beep_menu_init;
                 break;
         default:
                 break;
@@ -181,7 +211,8 @@ static void std_stream_choice_right(struct menu* this)
 
 static void alarm_btn_right(struct menu* this)
 {
-        switch(mnu->message_id)
+        set_alarm_menu();
+        /*switch(mnu->message_id)
         {
         case 0:
                 set_alarm_menu();
@@ -195,12 +226,13 @@ static void alarm_btn_right(struct menu* this)
                 break;
         default:
                 break;
-        }
+        }*/
         msg_updated = TRUE;
 }
 static void std_play_btn_right(struct menu* this)
 {
-	switch(mnu->message_id)
+        play_menu_init();
+	/*switch(mnu->message_id)
 	{
 	case 0:
                 play_menu_init();
@@ -210,7 +242,8 @@ static void std_play_btn_right(struct menu* this)
 		break;
 	default:
 		break;
-	}
+	}*/
+        msg_updated = TRUE;
 }
 
 static void std_alarm_stream_right(struct menu* this)
@@ -331,7 +364,7 @@ static void sd_menu_init()
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
 	mnu->btn_left = std_btn_left;
-        mnu->btn_right = std_play_btn_right;
+        mnu->btn_right = /*std_play_btn_right*/std_alarm_stream_right;
 
 }
 
@@ -359,15 +392,32 @@ static void play_menu_init()
 	mnu->btn_left = std_btn_left;
 }
 
+static void alarm_type_menu_init()
+{
+        if(mnu == NULL)
+                return;
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Alarm Type";
+        mnu->messages[0] = "Internet Radio";
+        mnu->messages[1] = "SD Music";
+        mnu->messages[2] = "Beep";
+        mnu->no_messages = 3;
+        mnu->parent_ctor = alarm_menu_init;
+        mnu->btn_up = std_btn_up;
+        mnu->btn_down = std_btn_down;
+        mnu->btn_left = std_btn_left;
+        mnu->btn_right = std_save_right;
+}
+
 static void save_menu_init()
 {
         if(mnu == NULL)
                 return;
         memset(mnu, 0, sizeof(struct menu));
-        mnu->top_line = "Settings being saved";
-        mnu->messages[0] = "Artist - Title Saved";
+        mnu->top_line = "Settings Saved";
+        mnu->messages[0] = "Settings are being saved...";
         mnu->no_messages = 1;
-        mnu->parent_ctor = alarm_menu_init;
+        mnu->parent_ctor = alarm_type_menu_init;
         mnu->btn_left = std_btn_left;
 }
 
