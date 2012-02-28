@@ -31,10 +31,7 @@ THREAD(mnu_thread, args)
 		if (mnu == NULL)
 			continue;
                 if (mnu->show_time)
-                {
-                        LcdWriteLine2(getTime("XX:YY:ZZ"));
-                        continue;
-                }
+                        LcdWriteLine2(getTime());
                 if (msg_updated)
                 {
                         LcdWriteLine1(mnu->top_line);
@@ -320,12 +317,12 @@ static void tz_menu_init()
 
 static void klok_menu_init()
 {
-        if(mnu == NULL)
-                return;
-        memset(mnu, 0, sizeof(struct menu));
-        mnu->top_line = "Klok";
-        std_mnu_prepare(mnu);
-        mnu->parent_ctor = std_mnu_build;
+	if(mnu == NULL)
+		return;
+	memset(mnu, 0, sizeof(struct menu));
+	mnu->top_line = "Klok";
+	mnu->parent_ctor = std_mnu_build;
+	mnu->btn_left = std_btn_left;
         mnu->show_time = true;
 }
 
