@@ -31,7 +31,10 @@ THREAD(mnu_thread, args)
 		if (mnu == NULL)
 			continue;
                 if (mnu->show_time)
+                {
                         LcdWriteLine2(getTime());
+                        continue;
+                }
                 if (msg_updated)
                 {
                         LcdWriteLine1(mnu->top_line);
