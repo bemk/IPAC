@@ -286,7 +286,7 @@ static void tz_menu_init()
 		return;
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Time zone";
-	mnu->messages[0] = "UTC + %";
+	mnu->messages[0] = "UTC + %i";
         mnu->no_messages = 1;
 	mnu->parent_ctor = std_mnu_build;
         mnu->btn_left = std_btn_left;
@@ -300,7 +300,7 @@ static void klok_menu_init()
 		return;
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Klok";
-	mnu->messages[0] = getTijd();
+	mnu->messages[0] = "%t";
         mnu->no_messages = 1;
 	mnu->parent_ctor = std_mnu_build;
 	mnu->btn_left = std_btn_left;
