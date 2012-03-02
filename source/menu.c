@@ -32,7 +32,7 @@ THREAD(mnu_thread, args)
 			continue;
                 if (mnu->show_time)
                 {
-                        LcdWriteLine2(getTime());
+                        LcdWriteLine2(getTime("XX:YY:ZZ"));
                         continue;
                 }
                 if (msg_updated)
