@@ -31,7 +31,10 @@ THREAD(mnu_thread, args)
 		if (mnu == NULL)
 			continue;
                 if (mnu->show_time)
-                        LcdWriteLine2(getTime());
+                {
+                        LcdWriteLine2(getTime("XX:YY:ZZ"));
+                        continue;
+                }
                 if (msg_updated)
                 {
                         LcdWriteLine1(mnu->top_line);
@@ -39,6 +42,17 @@ THREAD(mnu_thread, args)
                         msg_updated = FALSE;
                 }
 	}
+}
+
+/**
+ * \fn std_btn_esc
+ * \brief What will happen by default on esc press
+ */
+static void
+std_btn_esc(struct menu* this)
+{
+        std_mnu_build();
+        return;
 }
 
 /**
@@ -255,6 +269,14 @@ static void std_alarm_stream_right(struct menu* this)
         msg_updated = TRUE;
 }
 
+static void std_mnu_prepare(struct menu* this)
+{
+        this->btn_up = std_btn_up;
+        this->btn_down = std_btn_down;
+        this->btn_left = std_btn_left;
+        this->btn_esc = std_btn_esc;
+}
+
 static void std_mnu_build()
 {
 	memset(mnu, 0, sizeof(struct menu));
@@ -266,9 +288,8 @@ static void std_mnu_build()
 	mnu->no_messages = 4;
 	mnu->message_id = 0;
 
-	mnu->btn_up = std_btn_up;
-	mnu->btn_down = std_btn_down;
-	mnu->btn_right = std_btn_right;
+	std_mnu_prepare(mnu);
+        mnu->btn_right = std_btn_right;
 }
 
 void std_mnu_init()
@@ -284,26 +305,27 @@ void std_mnu_init()
 
 static void tz_menu_init()
 {
-	if (mnu == NULL)
-		return;
-	memset(mnu, 0, sizeof(struct menu));
-	mnu->top_line = "Time zone";
-	mnu->messages[0] = "UTC + %i";
+        if (mnu == NULL)
+                return;
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Time zone";
+        mnu->messages[0] = "UTC + %i";
         mnu->no_messages = 1;
-	mnu->parent_ctor = std_mnu_build;
-        mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
+        mnu->parent_ctor = std_mnu_build;
         mnu->btn_down = tz_btn_down;
         mnu->btn_up = tz_btn_up;
+        mnu->btn_esc = std_btn_esc;
 }
 
 static void klok_menu_init()
 {
-	if(mnu == NULL)
-		return;
-	memset(mnu, 0, sizeof(struct menu));
-	mnu->top_line = "Klok";
-	mnu->parent_ctor = std_mnu_build;
-	mnu->btn_left = std_btn_left;
+        if(mnu == NULL)
+                return;
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Klok";
+        std_mnu_prepare(mnu);
+        mnu->parent_ctor = std_mnu_build;
         mnu->show_time = true;
 }
 
@@ -318,9 +340,7 @@ void entertainment_menu_init()
 	mnu->no_messages = 2 ;
 
 	mnu->parent_ctor = std_mnu_build;
-	mnu->btn_left = std_btn_left;
-	mnu->btn_up = std_btn_up;
-	mnu->btn_down = std_btn_down;
+        std_mnu_prepare(mnu);
         mnu->btn_right = std_entertainment_btn_right;
 }
 
@@ -335,9 +355,7 @@ void alarm_menu_init()
 	mnu->no_messages = 2 ;
 
 	mnu->parent_ctor = std_mnu_build;
-	mnu->btn_left = std_btn_left;
-	mnu->btn_up = std_btn_up;
-	mnu->btn_down = std_btn_down;
+        std_mnu_prepare(mnu);
         mnu->btn_right = alarm_btn_right;
 }
 
@@ -350,7 +368,8 @@ static void stream_menu_init()
 	mnu->messages[0] = "Stream";
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
-	mnu->btn_left = std_btn_left;
+
+        std_mnu_prepare(mnu);
         mnu->btn_right = /*std_play_btn_right*/std_alarm_stream_right;
 
 }
@@ -364,7 +383,7 @@ static void sd_menu_init()
 	mnu->messages[0] = "bestand kiezen";
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
-	mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
         mnu->btn_right = /*std_play_btn_right*/std_alarm_stream_right;
 
 }
@@ -378,7 +397,7 @@ static void set_alarm_menu()
         mnu->messages[0] = "HH:MM";
         mnu->no_messages = 1;
         mnu->parent_ctor = alarm_menu_init;
-        mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
         mnu->btn_right = std_alarm_right;
 }
 static void play_menu_init()
@@ -390,7 +409,7 @@ static void play_menu_init()
 	mnu->messages[0] = "Artist - Title";
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
-	mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
 }
 
 static void alarm_type_menu_init()
@@ -404,9 +423,7 @@ static void alarm_type_menu_init()
         mnu->messages[2] = "Beep";
         mnu->no_messages = 3;
         mnu->parent_ctor = alarm_menu_init;
-        mnu->btn_up = std_btn_up;
-        mnu->btn_down = std_btn_down;
-        mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
         mnu->btn_right = std_save_right;
 }
 
@@ -419,7 +436,7 @@ static void save_menu_init()
         mnu->messages[0] = "Settings are being saved...";
         mnu->no_messages = 1;
         mnu->parent_ctor = alarm_type_menu_init;
-        mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
 }
 
 static void beep_menu_init()
@@ -431,5 +448,5 @@ static void beep_menu_init()
         mnu->messages[0] = "Beep set as Alarm";
         mnu->no_messages = 1;
         mnu->parent_ctor = alarm_menu_init;
-        mnu->btn_left = std_btn_left;
+        std_mnu_prepare(mnu);
 }
