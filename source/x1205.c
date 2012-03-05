@@ -53,8 +53,13 @@ char x1205ReadByte(unsigned char addr)
 	}
 	else
 	{
-               		LogMsg_P(LOG_INFO, PSTR("log: [%02x]"), readBuffer[0]);
+               		LogMsg_P(LOG_INFO, PSTR("before: [%02x]"), readBuffer[0]);
+                      
+                        
+                       // sprintf(readBuffer[0], "%d", readBuffer[0]);
+                       // LogMsg_P(LOG_INFO, PSTR("after: [%02d]"), readBuffer[0]);
 	}
+      
 	return readBuffer[0];
 }
 
