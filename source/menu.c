@@ -62,8 +62,7 @@ std_btn_esc(struct menu* this)
 static void tz_btn_up(struct menu* this)
 {
         this->mnu_cnt++;
-        if (this->mnu_cnt >= 24)
-                this->mnu_cnt = 0;
+        this->mnu_cnt %= 24;
         msg_updated = TRUE;
 }
 
@@ -74,8 +73,8 @@ static void tz_btn_up(struct menu* this)
 static void tz_btn_down(struct menu* this)
 {
         this->mnu_cnt--;
-        if  (this->mnu_cnt < 0)
-             this->mnu_cnt = 23;
+        if (this->mnu_cnt < 0)
+                this->mnu_cnt = 23;
         msg_updated = TRUE;
 }
 
