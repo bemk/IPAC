@@ -284,7 +284,8 @@ static void std_mnu_build()
 	mnu->messages[1] = "Klok instellen";
 	mnu->messages[2] = "Entertainment";
 	mnu->messages[3] = "Alarm";
-	mnu->no_messages = 4;
+        mnu->messages[4] = "Goose";
+	mnu->no_messages = 5;
 	mnu->message_id = 0;
 	std_mnu_prepare(mnu);
         mnu->btn_right = std_btn_right;
