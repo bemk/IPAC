@@ -217,12 +217,12 @@ static void std_save_right(struct menu* this)
         msg_updated = TRUE;
 }
 
-static void std_stream_choice_right(struct menu* this)
+/*static void std_stream_choice_right(struct menu* this)
 {
         if (this->std_child_ctor != NULL)
                 this->std_child_ctor();
         msg_updated = TRUE;
-}
+}*/
 
 static void alarm_btn_right(struct menu* this)
 {
@@ -244,22 +244,11 @@ static void alarm_btn_right(struct menu* this)
         }*/
         msg_updated = TRUE;
 }
-static void std_play_btn_right(struct menu* this)
+/*static void std_play_btn_right(struct menu* this)
 {
         play_menu_init();
-	/*switch(mnu->message_id)
-	{
-	case 0:
-                play_menu_init();
-                break;
-	case 1:
-	case 2:
-		break;
-	default:
-		break;
-	}*/
         msg_updated = TRUE;
-}
+}*/
 
 static void std_alarm_stream_right(struct menu* this)
 {
