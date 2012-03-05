@@ -3,6 +3,10 @@
 #include <sys/heap.h>
 #include "rtc.h"
 
+/**
+* \todo Rename functions and rewrite some code regarding navigation towards a 
+* single child.
+*/
 static void tz_menu_init(void);
 static void klok_menu_init(void);
 static void entertainment_menu_init(void);
@@ -46,7 +50,7 @@ THREAD(mnu_thread, args)
 
 /**
  * \fn std_btn_esc
- * \brief What will happen by default on esc press
+ * \brief What will happen by default on esc press.
  */
 static void
 std_btn_esc(struct menu* this)
@@ -57,7 +61,7 @@ std_btn_esc(struct menu* this)
 
 /**
  * \fn tz_btn_up
- * \brief What will happen when we push the button up in the timezone menu
+ * \brief What will happen when we push the button up in the timezone menu.
  */
 static void tz_btn_up(struct menu* this)
 {
@@ -68,7 +72,7 @@ static void tz_btn_up(struct menu* this)
 
 /**
  * \fn tz_btn_down
- * \brief
+ * \brief What will happen we we push the button down in the timezone menu.
  */
 static void tz_btn_down(struct menu* this)
 {
@@ -80,7 +84,7 @@ static void tz_btn_down(struct menu* this)
 
 /**
  * \fn std_btn_up
- * \brief Standard move up in the current menu
+ * \brief Standard move up in the current menu.
  */
 static void std_btn_up(struct menu* this)
 {
@@ -92,7 +96,7 @@ static void std_btn_up(struct menu* this)
 
 /**
  * \fn std_btn_down
- * \brief Standard move down in the current menu
+ * \brief Standard move down in the current menu.
  */
 static void std_btn_down(struct menu* this)
 {
@@ -104,7 +108,7 @@ static void std_btn_down(struct menu* this)
 
 /**
  * \fn std_btn_left
- * \brief Standard move to the parent menu
+ * \brief Standard move to the parent menu.
  */
 static void std_btn_left(struct menu* this)
 {
@@ -113,6 +117,10 @@ static void std_btn_left(struct menu* this)
                 msg_updated = TRUE;
 }
 
+/**
+ * \fn std_btn_right
+ * \brief Standard move to the child menu.
+ */
 static void std_btn_right(struct menu* this)
 {
 	switch(mnu->message_id)
@@ -142,6 +150,10 @@ static void std_btn_right(struct menu* this)
         msg_updated = TRUE;
 }
 
+/**
+ * \fn std_entertainment_btn_right
+ * \brief Standard move to the a child menu that plays music.
+ */
 static void std_entertainment_btn_right(struct menu* this)
 {
 	switch(mnu->message_id)
@@ -163,32 +175,21 @@ static void std_entertainment_btn_right(struct menu* this)
 
 }
 
+/**
+ * \fn std_alarm_right
+ * \brief Standard move to alarm type selection menu.
+ * \todo replace function inside menu.
+ */
 static void std_alarm_right(struct menu* this)
-{/*save_menu_init needs 3 items*/
+{
         alarm_type_menu_init();
-        /*switch(mnu->message_id)
-        {
-        case 0:
-                stream_menu_init();
-                mnu->parent_ctor = alarm_menu_init;
-                mnu->std_child_ctor = save_menu_init;
-                break;
-        case 1:
-                sd_menu_init();
-                mnu->parent_ctor = alarm_menu_init;
-                mnu->std_child_ctor = save_menu_init;
-                break;
-        case 2:
-                beep_menu_init();
-                mnu->parent_ctor = alarm_menu_init;
-                mnu->std_child_ctor = beep_menu_init;
-                break;
-        default:
-                break;
-        }*/
         msg_updated = TRUE;
 }
 
+/**
+ * \fn std_save_right
+ * \brief Standard move to the parent menu
+ */
 static void std_save_right(struct menu* this)
 {
         switch(mnu->message_id)
@@ -196,19 +197,16 @@ static void std_save_right(struct menu* this)
         case 0:
                 stream_menu_init();
                 mnu->parent_ctor = set_alarm_menu;
-                /*mnu->parent_ctor = alarm_type_menu_init;*/
                 mnu->std_child_ctor = save_menu_init;
                 break;
         case 1:
                 sd_menu_init();
                 mnu->parent_ctor = set_alarm_menu;
-                /*mnu->parent_ctor = alarm_type_menu_init;*/
                 mnu->std_child_ctor = save_menu_init;
                 break;
         case 2:
                 beep_menu_init();
                 mnu->parent_ctor = set_alarm_menu;
-                /*mnu->parent_ctor = alarm_type_menu_init;*/
                 mnu->std_child_ctor = beep_menu_init;
                 break;
         default:
@@ -217,6 +215,11 @@ static void std_save_right(struct menu* this)
         msg_updated = TRUE;
 }
 
+/**
+ * \fn std_stream_choice_right
+ * \deprecated Replaced by std_alarm_stream_right.
+ * \brief Explicit set of the child to navigate to.
+ */
 /*static void std_stream_choice_right(struct menu* this)
 {
         if (this->std_child_ctor != NULL)
@@ -224,32 +227,32 @@ static void std_save_right(struct menu* this)
         msg_updated = TRUE;
 }*/
 
+/**
+ * \fn alarm_btn_right
+ * \todo replace fucntion inside menu.
+ * \brief Move to the menu where the time can be adjusted.
+ */
 static void alarm_btn_right(struct menu* this)
 {
         set_alarm_menu();
-        /*switch(mnu->message_id)
-        {
-        case 0:
-                set_alarm_menu();
-                break;
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-                break;
-        default:
-                break;
-        }*/
         msg_updated = TRUE;
 }
+
+/**
+ * \fn std_play_btn_right
+ * \deprecated Replaced by std_entertainment_btn_right
+ * \brief Move to the play music menu.
+ */
 /*static void std_play_btn_right(struct menu* this)
 {
         play_menu_init();
         msg_updated = TRUE;
 }*/
 
+/**
+ * \fn std_alarm_stream_right
+ * \brief Explicit set of the child to navigate to.
+ */
 static void std_alarm_stream_right(struct menu* this)
 {
         if (this->std_child_ctor != NULL)
@@ -257,6 +260,10 @@ static void std_alarm_stream_right(struct menu* this)
         msg_updated = TRUE;
 }
 
+/**
+ * \fn std_mnu_prepare
+ * \brief Sets standard button functions.
+ */
 static void std_mnu_prepare(struct menu* this)
 {
         this->btn_up = std_btn_up;
@@ -265,6 +272,10 @@ static void std_mnu_prepare(struct menu* this)
         this->btn_esc = std_btn_esc;
 }
 
+/**
+ * \fn std_mnu_build
+ * \brief Builds the main menu.
+ */
 static void std_mnu_build()
 {
 	memset(mnu, 0, sizeof(struct menu));
@@ -275,22 +286,28 @@ static void std_mnu_build()
 	mnu->messages[3] = "Alarm";
 	mnu->no_messages = 4;
 	mnu->message_id = 0;
-
 	std_mnu_prepare(mnu);
         mnu->btn_right = std_btn_right;
 }
 
+/**
+ * \fn std_mnu_init
+ * \brief Initliazes the application by starting up the main menu.
+ */
 void std_mnu_init()
 {
 	if (mnu == NULL)
 		mnu = malloc(sizeof(*mnu));
 	if (mnu == NULL)
 		return;
-
 	std_mnu_build();
 	NutThreadCreate("Menu", mnu_thread, NULL, 512);
 }
 
+/**
+ * \fn tz_menu_init
+ * \brief Inizializes the time zone menu.
+ */
 static void tz_menu_init()
 {
         if (mnu == NULL)
@@ -306,6 +323,10 @@ static void tz_menu_init()
         mnu->btn_esc = std_btn_esc;
 }
 
+/**
+ * \fn klok_menu_init
+ * \brief The timeclock menu.
+ */
 static void klok_menu_init()
 {
         if(mnu == NULL)
@@ -317,6 +338,10 @@ static void klok_menu_init()
         mnu->show_time = true;
 }
 
+/**
+ * \fn entertainment_menu_init
+ * \brief The entertainment selection menu which goes to play mode.
+ */
 void entertainment_menu_init()
 {
 	if(mnu == NULL)
@@ -326,12 +351,15 @@ void entertainment_menu_init()
 	mnu->messages[0] = "Internet Radio";
 	mnu->messages[1] = "SD music";
 	mnu->no_messages = 2 ;
-
 	mnu->parent_ctor = std_mnu_build;
         std_mnu_prepare(mnu);
         mnu->btn_right = std_entertainment_btn_right;
 }
 
+/**
+ * \fn alarm_menu_init
+ * \brief The main alarm clock menu.
+ */
 void alarm_menu_init()
 {
 	if(mnu == NULL)
@@ -341,12 +369,15 @@ void alarm_menu_init()
 	mnu->messages[0] = "Set alarm";
 	mnu->messages[1] = "Set ON/OFF";
 	mnu->no_messages = 2 ;
-
 	mnu->parent_ctor = std_mnu_build;
         std_mnu_prepare(mnu);
         mnu->btn_right = alarm_btn_right;
 }
 
+/**
+ * \fn stream_menu_init
+ * \brief The internet stream selection menu.
+ */
 static void stream_menu_init()
 {
 	if(mnu == NULL)
@@ -356,12 +387,15 @@ static void stream_menu_init()
 	mnu->messages[0] = "Stream";
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
-
         std_mnu_prepare(mnu);
-        mnu->btn_right = /*std_play_btn_right*/std_alarm_stream_right;
+        mnu->btn_right = std_alarm_stream_right;
 
 }
 
+/**
+ * \fn sd_menu_init
+ * \brief The SD file selection menu.
+ */
 static void sd_menu_init()
 {
 	if(mnu == NULL)
@@ -372,10 +406,14 @@ static void sd_menu_init()
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
         std_mnu_prepare(mnu);
-        mnu->btn_right = /*std_play_btn_right*/std_alarm_stream_right;
+        mnu->btn_right = std_alarm_stream_right;
 
 }
 
+/**
+ * \fn set_alarm_menu
+ * \brief The alarm time selection menu (open for changes).
+ */
 static void set_alarm_menu()
 {
         if(mnu == NULL)
@@ -388,6 +426,11 @@ static void set_alarm_menu()
         std_mnu_prepare(mnu);
         mnu->btn_right = std_alarm_right;
 }
+
+/**
+ * \fn play_menu_init
+ * \brief The play menu used by both stream and sd music.
+ */
 static void play_menu_init()
 {
         if(mnu == NULL)
@@ -400,6 +443,10 @@ static void play_menu_init()
         std_mnu_prepare(mnu);
 }
 
+/**
+ * \fn alarm_type_menu_init
+ * \brief The alarm type selection menu; radio, sd or beep.
+ */
 static void alarm_type_menu_init()
 {
         if(mnu == NULL)
@@ -415,6 +462,10 @@ static void alarm_type_menu_init()
         mnu->btn_right = std_save_right;
 }
 
+/**
+ * \fn save_menu_init
+ * \brief This menu shows it when settings are saved.
+ */
 static void save_menu_init()
 {
         if(mnu == NULL)
@@ -427,6 +478,11 @@ static void save_menu_init()
         std_mnu_prepare(mnu);
 }
 
+/**
+ * \fn std_mnu_build
+ * \deprecated Use save_menu_init when saving settings.
+ * \brief This menu saves a beep alarm type.
+ */
 static void beep_menu_init()
 {
         if(mnu == NULL)
