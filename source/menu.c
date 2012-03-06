@@ -5,6 +5,11 @@
 #include "x1205.h"
 #include "rtc.h"
 
+#include "startstream.h"
+/**
+* \todo Rename functions and rewrite some code regarding navigation towards a 
+* single child.
+*/
 static void tz_btn_up(struct menu* this);
 static void tz_btn_down(struct menu* this);
 static void std_btn_up(struct menu* this);
@@ -178,6 +183,75 @@ static void std_btn_left(struct menu* this)
  */
 static void std_btn_right(struct menu* this)
 {
+	switch(mnu->message_id)
+	{
+	case 0:
+		tz_menu_init();
+		break;
+	case 1:
+		klok_menu_init();
+		break;
+	case 2:
+		entertainment_menu_init();
+		break;
+	case 3:
+		alarm_menu_init();
+		break;
+        case 4:
+                stream_menu_init();
+                break;
+	case 5:
+	case 6:
+	case 7:
+		break;
+	default:
+		break;
+        }
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn std_entertainment_btn_right
+ * \brief Standard move to the a child menu that plays music.
+ */
+static void std_entertainment_btn_right(struct menu* this)
+{
+	switch(mnu->message_id)
+	{
+	case 0:
+				stream_menu_init();
+                mnu->parent_ctor = entertainment_menu_init;
+                mnu->std_child_ctor = play_menu_init;
+		break;
+	case 1:
+                sd_menu_init();
+                mnu->parent_ctor = entertainment_menu_init;
+                mnu->std_child_ctor = play_menu_init;
+                break;
+	default:
+		break;
+	}
+        msg_updated = TRUE;
+
+}
+
+/**
+ * \fn std_alarm_right
+ * \brief Standard move to alarm type selection menu.
+ * \todo replace function inside menu.
+ */
+static void std_alarm_right(struct menu* this)
+{
+        alarm_type_menu_init();
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn std_save_right
+ * \brief Standard move to the parent menu
+ */
+static void std_save_right(struct menu* this)
+{
         switch(mnu->message_id)
         {
         case 0:
@@ -205,7 +279,53 @@ static void std_btn_right(struct menu* this)
 }
 
 /**
- * \fn std_mnu_buttons
+ * \fn std_stream_choice_right
+ * \deprecated Replaced by std_alarm_stream_right.
+ * \brief Explicit set of the child to navigate to.
+ */
+/*static void std_stream_choice_right(struct menu* this)
+{
+        if (this->std_child_ctor != NULL)
+                this->std_child_ctor();
+        msg_updated = TRUE;
+}*/
+
+/**
+ * \fn alarm_btn_right
+ * \todo replace fucntion inside menu.
+ * \brief Move to the menu where the time can be adjusted.
+ */
+static void alarm_btn_right(struct menu* this)
+{
+        set_alarm_menu();
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn std_play_btn_right
+ * \deprecated Replaced by std_entertainment_btn_right
+ * \brief Move to the play music menu.
+ */
+/*static void std_play_btn_right(struct menu* this)
+{
+        play_menu_init();
+        msg_updated = TRUE;
+}*/
+
+/**
+ * \fn std_alarm_stream_right
+ * \brief Explicit set of the child to navigate to.
+ */
+static void std_alarm_stream_right(struct menu* this)
+{
+        if (this->std_child_ctor != NULL)
+                this->std_child_ctor();
+        msg_updated = TRUE;
+		
+}
+
+/**
+ * \fn std_mnu_prepare
  * \brief Sets standard button functions.
  */
 static void std_mnu_buttons(struct menu* this)
@@ -486,6 +606,7 @@ static void play_menu_init()
 {
         if(mnu == NULL)
 		return;
+		start_playing();
 	memset(mnu, 0, sizeof(struct menu));
 	mnu->top_line = "Music is playing";
 	mnu->messages[0] = "Artist - Title";
