@@ -17,7 +17,7 @@ AVR_INC = c:/winavr/avr/include
 CC		= 	avr-gcc
 CFLAGS	= 	-mmcu=atmega2561 -Os -Wall -Wstrict-prototypes -DNUT_CPU_FREQ=14745600 \
 			-D__HARVARD_ARCH__ -DNUTOS_VERSION=433 \
-			-Wa,-ahlms=$(SRC_DIR)/$*lst
+			-Wa,-ahlms=$(SRC_DIR)/$*lst -D DBG
 ASFLAGS = 	-mmcu=atmega2561 -I. -x assembler-with-cpp -Wa,-ahlms=$(SRC_DIR)/$*lst,-gstabs
 LDFLAGS	=	-mmcu=atmega2561 -Wl,--defsym=main=0,-Map=TIStreamer.map,--cref
 
