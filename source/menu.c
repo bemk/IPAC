@@ -301,7 +301,7 @@ void std_mnu_init()
 	if (mnu == NULL)
 		return;
 	std_mnu_build();
-	NutThreadCreate("Menu", mnu_thread, NULL, 512);
+	NutThreadCreate("Menu", mnu_thread, NULL, 1024);
 }
 
 /**
