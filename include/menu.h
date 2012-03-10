@@ -54,7 +54,6 @@ struct menu {
          * \var no_messages
          * \brief How many messages do we have
          */
-
         char* top_line;
         char* messages[10];
         int message_id;
@@ -63,7 +62,7 @@ struct menu {
         bool show_time;
 };
 
-void std_mnu_init(void);
+void main_mnu_init(void);
 
 extern struct menu *mnu;
 extern char* itoc[24];
