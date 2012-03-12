@@ -60,6 +60,22 @@ struct menu {
         int no_messages;
         int mnu_cnt;
         bool show_time;
+        
+        /**
+        * \var time_field
+        * \brief denotes the time field to change
+        * \var hVal
+        * \brief describes the hours
+        * \var mVal
+        * \brief describes the minutes
+        * \var sVal
+        * \brief describes the seconds
+        **/
+        int time_field;
+        int hVal;
+        int mVal;
+        int sVal;
+        bool clock_set;
 };
 
 void main_mnu_init(void);

@@ -31,6 +31,12 @@ static void alarm_type_menu_init(void);
 static void save_alarm_type(struct menu* this);
 static void save_menu_init(void);
 
+static void time_btn_up(struct menu* this);
+static void time_btn_down(struct menu* this);
+static void time_btn_left(struct menu* this);
+static void time_btn_right(struct menu* this);
+static void time_btn_ok(struct menu* this);
+
 static void goose_menu_init(void);
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
@@ -38,6 +44,7 @@ char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
 
 struct menu *mnu = NULL;
 bool msg_updated = TRUE;
+char* clock_msg = "XX:YY:ZZ";
 
 THREAD(mnu_thread, args)
 {
@@ -47,9 +54,11 @@ THREAD(mnu_thread, args)
 		NutSleep(THREAD_SLEEP_TIME);
 		if (mnu == NULL)
 			continue;
-                if (mnu->show_time)
+                if (mnu->clock_set)
                 {
-                        LcdWriteLine2(getTime("XX:YY:ZZ"));
+                        LcdWriteLine1(mnu->top_line);
+                        sprintf(clock_msg, "%02d:%02d:%02d", mnu->hVal, mnu->mVal, mnu->sVal);
+                        LcdWriteLine2(clock_msg);
                         continue;
                 }
                 if (msg_updated)
@@ -58,8 +67,10 @@ THREAD(mnu_thread, args)
                         LcdWriteLine2(mnu->messages[mnu->message_id]);
                         msg_updated = FALSE;
                 }
+                
 	}
 }
+
 
 /**
  * \fn tz_btn_up
@@ -237,7 +248,106 @@ static void clock_menu_init()
         mnu->top_line = "Clock";
         std_mnu_buttons(mnu);
         mnu->parent_ctor = main_mnu_build;
-        mnu->show_time = true;
+        mnu->clock_set = TRUE;
+        mnu->btn_up = time_btn_up;
+        mnu->btn_down = time_btn_down;
+        mnu->btn_left = time_btn_left;
+        mnu->btn_right = time_btn_right;
+        mnu->btn_ok = time_btn_ok;
+}
+
+/**
+ * \fn time_btn_up
+ * \brief raises the hours, minutes or seconds
+ */
+static void time_btn_up(struct menu* this)
+{
+        switch(this->time_field)
+	{
+	case 0:
+		this->hVal++;
+                this->hVal %= 24;
+		break;
+	case 1:
+		this->mVal++;
+                this->mVal %= 60;
+		break;
+	case 2:
+                this->sVal++;
+                this->sVal %= 60;
+                break;
+	default:
+		break;
+        }
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_down
+ * \brief decrease the hours, minutes or seconds
+ */
+static void time_btn_down(struct menu* this)
+{
+        switch(this->time_field)
+	{
+	case 0:
+		this->hVal--;
+                if(this->hVal < 0)
+                        this->hVal = 23;
+		break;
+	case 1:
+		this->mVal--;
+                if(this->mVal < 0)
+                        this->mVal = 59;
+		break;
+	case 2:
+                this->sVal--;
+                if(this->sVal < 0)
+                        this->sVal = 59;
+                break;
+	default:
+		break;
+        }
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_left
+ * \brief navigate between hours, minutes and seconds
+ */
+static void time_btn_left(struct menu* this)
+{
+        this->time_field --;
+        if (this->time_field < 0)
+                this->time_field = 2;
+
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_right
+ * \brief navigate between hours, minutes and seconds
+ */
+static void time_btn_right(struct menu* this)
+{ 
+        this->time_field ++;
+        if (this->time_field > 2)
+                this->time_field = 0;
+
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_ok
+ * \brief save the hours, minutes and seconds
+ */
+static void time_btn_ok(struct menu* this)
+{
+        x1205WriteByte(0x30, BIN2BCD(this->sVal));
+        x1205WriteByte(0x31, BIN2BCD(this->mVal));
+        x1205WriteByte(0x32, BIN2BCD(this->hVal) | 0x80);
+        
+        msg_updated = TRUE;
 }
 
 /**
