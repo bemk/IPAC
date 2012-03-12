@@ -45,6 +45,8 @@ char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
 struct menu *mnu = NULL;
 bool msg_updated = TRUE;
 char* clock_msg = "XX:YY:ZZ";
+char blink;
+#define BLINK_IT 10
 
 THREAD(mnu_thread, args)
 {
@@ -57,7 +59,29 @@ THREAD(mnu_thread, args)
                 if (mnu->clock_set)
                 {
                         LcdWriteLine1(mnu->top_line);
-                        sprintf(clock_msg, "%02d:%02d:%02d", mnu->hVal, mnu->mVal, mnu->sVal);
+                        if (blink < BLINK_IT/4)
+                        {
+                                switch(mnu->time_field)
+                                {
+                                case 0:
+                                        sprintf(clock_msg, "  :%02d:%02d",
+                                                          mnu->mVal, mnu->sVal);
+                                        break;
+                                case 1:
+                                        sprintf(clock_msg, "%02d:  :%02d",
+                                                           mnu->hVal, mnu->sVal);
+                                        break;
+                                case 2:
+                                        sprintf(clock_msg, "%02d:%02d:  ", 
+                                                          mnu->hVal, mnu->mVal);
+                                        break;
+                                }
+                        }
+                        else
+                                sprintf(clock_msg, "%02d:%02d:%02d", 
+                                               mnu->hVal, mnu->mVal, mnu->sVal);
+                        blink += 4;
+                        blink %= BLINK_IT;
                         LcdWriteLine2(clock_msg);
                         continue;
                 }
