@@ -162,31 +162,42 @@ FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint)
         if(strncmp(line, "icy-metaint:", 12) == 0) {
             *metaint = atol(line + 12);
         }
-		if(strncmp( line, "icy-description:",16) == 0)
-		{
-			int i;
-			int j = 0;
-			for(i =16; i<strlen(line); i++)
-			{
-				Description[j] = line[i];
-				j++;
-			}
-		}
-		putchar('\n');
-		if(strncmp( line, "icy-name:",9) == 0)
-		{
-			int i;
-			int j = 0;
-			for(i =9; i<strlen(line); i++)
-			{
-				Title[j] = line[i];
-				j++;
-			}
-		}
-        printf("%s\n", line);
+		// if(strncmp( line, "icy-description:",16) == 0)
+		// {
+			// int i;
+			// int j = 0;
+			// for(i =16; i<strlen(line); i++)
+			// {
+				// Description[j] = line[i];
+				// j++;
+			// }
+		// }
+		// putchar('\n');
+		// if(strncmp( line, "icy-name:",9) == 0)
+		// {
+			// int i;
+			// int j = 0;
+			// for(i =9; i<strlen(line); i++)
+			// {
+				// Title[j] = line[i];
+				// j++;
+			// }
+		// }
+        // printf("%s\n", line);
+		// if(strncmp( line, "StreamTitle=",12) == 0)
+		// {
+			// int i;
+			// int j = 0;
+			// for(i =12; i<strlen(line); i++)
+			// {
+				// j] = line[i];
+				// j++;
+			// }
+		// }
+       // printf("%s\n ", Title);
     }
     putchar('\n');
-
+	LcdWriteLine2(Title);
     free(line);
 	//DisplayInfo(Title,Description);
 
@@ -195,10 +206,10 @@ FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint)
 
 void DisplayInfo(char title[], char description[])
 {
-//	start_display();
-//	LcdBackLight(1);
-//	LcdWriteLine1(title);
-//	LcdWriteLine2(description);
+	// start_display();
+	// LcdBackLight(1);
+	// LcdWriteLine1(title);
+	// LcdWriteLine2(description);
 	
 }
 
@@ -248,11 +259,33 @@ int ProcessMetaData(FILE *stream)
 
         printf("\nMeta='%s'\n", mbuf);
 		
-
+///////////////////////////////////////////////////////////////////////////
+		if(strncmp(mbuf, "StreamTitle=", 12) == 0)
+		{
+			int i;
+			int j = 0;
+			for(i =13; i<strlen(mbuf); i++)
+			{
+				Description[j] = mbuf[i];
+				j++;
+			}
+		}
+		if(strncmp(mbuf, "StreamUrl=", 10) == 0)
+		{
+			int i;
+			int j = 0;
+			for(i =11; i<strlen(mbuf); i++)
+			{
+				Title[j] = mbuf[i];
+				j++;
+			}
+		}
+	//lcdWriteline(Title,Description);
+		//char buffer[80];
+		//sprintf(&buffer, "%s - %s", Title, Description);
+		LcdWriteLine2(Description);
 		
 		
-		
-		LcdWriteLine2(mbuf);
         free(mbuf);
     }
 	
