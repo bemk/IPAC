@@ -1,6 +1,7 @@
-
 #include <stdio.h>
 
-void test( void );
-int readData( uint16_t addr );
-int writeData( uint16_t addr, void *data );
+void store_tests( void );
+
+void readByte(uint8_t adr);
+void readWords(uint16_t adr);
+void writeWords(uint16_t adr, char *data)
