@@ -5,7 +5,16 @@
 extern "C" {
 #endif
 
+/**
+ * \typedef bool
+ * \brief Use this instead of chars
+ */
 typedef enum {false, true} bool;
+
+/**
+ * \typedef string
+ * \brief The standard C type string
+ */
 typedef char* string;
 
 #ifdef __cplusplus

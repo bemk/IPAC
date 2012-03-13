@@ -98,7 +98,7 @@ THREAD(key_handle, arg)
                 default:
                         break;
                 }
-		double_pressed = false;
+                double_pressed = false;
         }
 }
 
