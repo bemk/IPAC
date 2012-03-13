@@ -1,3 +1,6 @@
+#ifndef TESTSTREAM_H
+#define TESTSTREAM_H
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -23,6 +26,10 @@
 #include <netinet/tcp.h>
 
 #include <pro/dhcp.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * Determine the compiler.
@@ -122,7 +129,20 @@
  */
 #define TCPIP_READTIMEOUT 3000
 
+ struct tekstScrollInfo{
+        char *title;
+        char *Description;
+};
+
 int ConfigureLan(char *devname);
 void PlayMp3Stream(FILE *stream, u_long metaint);
 FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint);
+void reload_display(void);
 
+extern volatile char Description[];
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

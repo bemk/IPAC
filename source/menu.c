@@ -6,6 +6,8 @@
 #include "rtc.h"
 
 #include "startstream.h"
+#include "testStream.h"
+
 /**
 * \todo Rename functions and rewrite some code regarding navigation towards a 
 * single child.
@@ -47,9 +49,9 @@ static void time_btn_ok(struct menu* this);
 static void goose_menu_init(void);
 static void home_mnu_init(void);
 
+
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
                         "14","15","16","17","18","19","20","21","22","23"};
-
 struct menu *mnu = NULL;
 bool msg_updated = TRUE;
 char* clock_msg = "XX:YY:ZZ";
@@ -605,11 +607,13 @@ static void nav_to_preset_child(struct menu* this)
 static void play_menu_init()
 {
         if(mnu == NULL)
-		return;
-		start_playing();
-	memset(mnu, 0, sizeof(struct menu));
-	mnu->top_line = "Music is playing";
-	mnu->messages[0] = "Artist - Title";
+                return;
+                
+        start_playing();        
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Music is playing";
+        mnu->messages[0] = (char*)Description;
+        
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
         std_mnu_buttons(mnu);
