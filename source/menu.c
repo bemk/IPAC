@@ -1,6 +1,7 @@
 #include "application.h"
 #include "menu.h"
 #include <sys/heap.h>
+#include <dev/rtc.h>
 #include "rtc.h"
 
 static void tz_btn_up(struct menu* this);
@@ -271,6 +272,9 @@ static void clock_menu_init()
         memset(mnu, 0, sizeof(struct menu));
         mnu->top_line = "Clock";
         std_mnu_buttons(mnu);
+       //mnu->messages[0] = getTime(clock_msg);
+        mnu->hVal = BCD2BIN(x1205ReadByte(0x32) & 0x3F);
+        mnu->mVal = BCD2BIN(x1205ReadByte(0x31));
         mnu->parent_ctor = main_mnu_build;
         mnu->clock_set = TRUE;
         mnu->btn_up = time_btn_up;
