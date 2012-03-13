@@ -43,7 +43,7 @@ int is_running = 0;
 typedef struct {
         char *name;
         FILE *stream;
-        void *metaint;
+        u_long metaint;
         int sleeptime;
 }thread_args;
 
@@ -63,10 +63,13 @@ THREAD(PlayMp3StreamThread, arg)
         thread_args *my_args;
         my_args = (thread_args *) arg;
         NutSleep(my_args->sleeptime);
-        PlayMp3Stream((FILE *)my_args->stream,(void *) my_args->metaint);
+        PlayMp3Stream((FILE *)my_args->stream, my_args->metaint);
         NutSleep(my_args->sleeptime);
         fclose((FILE *)my_args->stream);
         NutSleep(my_args->sleeptime);
+        NutThreadExit();
+        for(;;)
+                NutSleep(0xFFFF);
 }
 
 TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufsiz)
@@ -112,7 +115,7 @@ TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufs
                         arguments = malloc(sizeof(thread_args));
                         arguments->name = "mp3 stream";
                         arguments->stream = (FILE *)stream;
-                        arguments->metaint = (void *)metaint;
+                        arguments->metaint = metaint;
                         arguments->sleeptime = 100;
          
                         NutThreadCreate(arguments->name, PlayMp3StreamThread, 
@@ -129,4 +132,5 @@ TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufs
 		return 0;
 	
 	}
+        return 0;
 }

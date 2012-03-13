@@ -91,8 +91,8 @@ FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint)
 {
         int rc;
         FILE *stream;
-        u_char *line;
-        u_char *cp;
+        char *line;
+        char *cp;
 
         /* 
         * Connect the TCP server. 
@@ -189,7 +189,7 @@ FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint)
         // printf("%s\n ", Title);
         }
         putchar('\n');
-        LcdWriteLine2(Title);
+        LcdWriteLine2((char*)Title);
         free(line);
         //DisplayInfo(Title,Description);
 
@@ -211,11 +211,11 @@ void DisplayInfo(char title[], char description[])
  */
 int ProcessMetaData(FILE *stream)
 {
-        u_char blks = 0;
+        char blks = 0;
         u_short cnt;
         int got;
         int rc = 0;
-        u_char *mbuf;
+        char *mbuf;
 
         /*
         * Wait for the lenght byte.
@@ -265,7 +265,7 @@ int ProcessMetaData(FILE *stream)
 			int j = 0;
                         for(i =13; i<strlen(mbuf); i++)
                         {
-                                if(mbuf[i] != '\'')
+                                if(mbuf[i] != '\'' && mbuf[i+1] != ';')
                                 {
                                         Description[j] = mbuf[i];
                                         j++;
@@ -292,18 +292,11 @@ int ProcessMetaData(FILE *stream)
                 //		char buffer[80];
                 //	sprintf(&buffer, "'%s", Description);
 
-		LcdWriteLine2(Description);
+		LcdWriteLine2((char*)Description);
 		
 		free(mbuf);
         }
         return 0;
-}
-
-
-reload_display(void)
-{
-	LcdWriteLine2(Description);
-	printf("%s", Description);
 }
 
 /*
@@ -315,7 +308,7 @@ void PlayMp3Stream(FILE *stream, u_long metaint)
 {
         printf("PLAAAY");
         size_t rbytes;
-        u_char *mp3buf;
+        char *mp3buf;
         u_char ief;
         int got = 0;
         u_long last;
