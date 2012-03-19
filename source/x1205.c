@@ -30,6 +30,60 @@ void x1205Init(void)
 	 LogMsg_P(LOG_INFO, PSTR("x1205Init()"));
 }
 
+
+/* ******************************************************************* */
+int x1205WriteNBytes(unsigned char addr, unsigned char *data, u_char cnt ) 
+/*
+ * Write N bytes to RTC starting at addr. 
+ *
+ */
+{
+	int retval = 0;
+	int idx  = 0;
+	
+	u_char *wrBuf = (u_char *)malloc ((cnt+3) * sizeof(u_char));
+	
+	wrBuf[0] = 0;	
+	wrBuf[1] = addr;
+	for( idx = 0; idx < cnt; idx++ )
+	{
+		wrBuf[idx+2] = data[idx];
+	}
+	
+	TwMasterTransact(I2C_SLA_RTC, wrBuf, cnt+2, 0, 0, NUT_WAIT_INFINITE);
+
+	free(wrBuf);
+	
+	return retval;
+}
+
+
+/* ******************************************************************* */
+int x1205ReadNByte(u_char addr, u_char *buf, u_char cnt )
+/*
+ * Reads N bytes from x1205 starting at addr. 
+ *
+ */
+{
+	int retval = 0;
+	
+	u_char writeBuffer[2];	
+	writeBuffer[0] = 0;
+	writeBuffer[1] = addr;  // SC register in x1205 RTC, datasheet page 10
+	
+	// TwMasterTransact schrijft eerst en leest daarna. Dit is wat we willen.
+	// Schrijf eerst werk register we willen lezen, daarna lees het register
+	if( TwMasterTransact(I2C_SLA_RTC, writeBuffer, 2, buf, cnt, NUT_WAIT_INFINITE) != cnt )
+	{
+		retval = -1;
+		LogMsg_P(LOG_INFO, PSTR("error x1205readByte()"));
+	}
+	return retval;
+}
+
+
+
+
 char x1205ReadByte(unsigned char addr)
 {
 	int retval = 1;
