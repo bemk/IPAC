@@ -1,8 +1,6 @@
 #ifndef X1205_INCLUDE
 #define X1205_INCLUDE
 
-
-
 /* prototypes */
 void x1205Init(void);
 int x1205Enable(void);
