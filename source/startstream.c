@@ -35,9 +35,11 @@
 #include "rtc.h"
 #include "wan.h"
 #include "startstream.h"
+#include "menu.h"
 
 TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufsiz);
 int is_running = 0;
+int *volume;
 /* contains the args for mp3streamthread*/
 typedef struct {
         char *name;
@@ -110,6 +112,7 @@ int start_playing()
 				
 		is_running = 1;
 		playing = 1;
+                
                 NutThreadCreate("mp3Stream" , PlayMp3StreamThread, NULL, 256);
              
 	}

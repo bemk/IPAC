@@ -59,6 +59,7 @@ struct menu *mnu = NULL;
 bool msg_updated = TRUE;
 char* clock_msg = "XX:YY:ZZ";
 char blink;
+int* volume;
 #define BLINK_IT 10
 
 THREAD(mnu_thread, args)
@@ -629,11 +630,11 @@ static void play_menu_init()
 * volume_up, adds the volume
 * 
 */
-int i;
+
 static void volume_up(struct menu* this)
 {
-        i -= 5;
-        VsSetVolume(i,i);
+        volume -= 5;
+        VsSetVolume((int)volume,(int)volume);
 }
 
 
@@ -643,8 +644,8 @@ static void volume_up(struct menu* this)
 */
 static void volume_down(struct menu* this)
 { 
-        i += 5;
-        VsSetVolume(i,i);
+        volume += 5;
+        VsSetVolume((int)volume,(int)volume);
 }
 /**
  * \fn alarm_menu_init
