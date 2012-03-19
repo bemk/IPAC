@@ -1,39 +1,7 @@
 /*
- * Copyright (C) 2004 by egnite Software GmbH. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the copyright holders nor the names of
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY EGNITE SOFTWARE GMBH AND CONTRIBUTORS
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL EGNITE
- * SOFTWARE GMBH OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
- * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * For additional information see http://www.ethernut.de/
- *
+ * 
  */
 
-/*!
- * $Log$
- */
 
 #include <stdlib.h>
 #include <string.h>
@@ -64,8 +32,9 @@
 #include "display.h"
 
 #include <pro/dhcp.h>
-#include "testStream.h"
+#include "processStream.h"
 #include "wan.h"
+#include "startstream.h"
 
 /*
  * Description String
@@ -154,55 +123,13 @@ FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint)
         if(strncmp(line, "icy-metaint:", 12) == 0) {
                 *metaint = atol(line + 12);
         }
-                // if(strncmp( line, "icy-description:",16) == 0)
-                // {
-                        // int i;
-                        // int j = 0;
-                        // for(i =16; i<strlen(line); i++)
-                        // {
-                                // Description[j] = line[i];
-                                // j++;
-                        // }
-                // }
-                // putchar('\n');
-                // if(strncmp( line, "icy-name:",9) == 0)
-                // {
-                        // int i;
-                        // int j = 0;
-                        // for(i =9; i<strlen(line); i++)
-                        // {
-                                // Title[j] = line[i];
-                                // j++;
-                        // }
-                // }
-        // printf("%s\n", line);
-                // if(strncmp( line, "StreamTitle=",12) == 0)
-                // {
-                        // int i;
-                        // int j = 0;
-                        // for(i =12; i<strlen(line); i++)
-                        // {
-                                // j] = line[i];
-                                // j++;
-                        // }
-                // }
-        // printf("%s\n ", Title);
+               
         }
         putchar('\n');
         LcdWriteLine2((char*)Title);
         free(line);
-        //DisplayInfo(Title,Description);
-
+       
         return stream;
-}
-
-void DisplayInfo(char title[], char description[])
-{
-	// start_display();
-	// LcdBackLight(1);
-	// LcdWriteLine1(title);
-	// LcdWriteLine2(description);
-	
 }
 
 
@@ -265,6 +192,8 @@ int ProcessMetaData(FILE *stream)
 			int j = 0;
                         for(i =13; i<strlen(mbuf); i++)
                         {
+// this code checks for the end of the meta title, it ends with a '; if this is
+// reached, break the line !                        
                                 if(mbuf[i] != '\'' && mbuf[i+1] != ';')
                                 {
                                         Description[j] = mbuf[i];
@@ -288,9 +217,7 @@ int ProcessMetaData(FILE *stream)
 				j++;
 			}
 		}
-                //lcdWriteline(Title,Description);
-                //		char buffer[80];
-                //	sprintf(&buffer, "'%s", Description);
+            
 
 		LcdWriteLine2((char*)Description);
 		
@@ -306,7 +233,7 @@ int ProcessMetaData(FILE *stream)
  */
 void PlayMp3Stream(FILE *stream, u_long metaint)
 {
-        printf("PLAAAY");
+       
         size_t rbytes;
         char *mp3buf;
         u_char ief;
@@ -342,7 +269,7 @@ void PlayMp3Stream(FILE *stream, u_long metaint)
         VsPlayerInterrupts(ief);
         last = NutGetSeconds();
 
-        for (;;) 
+        for (;playing == 1;) 
         {
                 /*
                  * Query number of byte available in MP3 buffer.
@@ -373,7 +300,7 @@ void PlayMp3Stream(FILE *stream, u_long metaint)
                 /* 
                  * Read data directly into the MP3 buffer. 
                  */
-                while (rbytes)
+                while (rbytes && playing == 1)
                 {
                         if ((got = fread(mp3buf, 1, rbytes, stream)) > 0) 
                         {

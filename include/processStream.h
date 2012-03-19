@@ -1,5 +1,5 @@
-#ifndef TESTSTREAM_H
-#define TESTSTREAM_H
+#ifndef PROCESSSTREAM_H
+#define PROCESSSTREAM_H
 
 #include <stdlib.h>
 #include <string.h>
@@ -134,11 +134,30 @@ extern "C" {
         char *Description;
 };
 
-int ConfigureLan(char *devname);
+/**
+* \fn PlayMp3Stream
+* \brief feeds the mp3 decoder chip with data, resulting in a playing stream
+* \return void
+*/
 void PlayMp3Stream(FILE *stream, u_long metaint);
+
+/**
+* \fn *ConnectStation
+* \brief connects to the station using the given details for location
+* \return a file stream filled with mp3 blocks
+*/
 FILE *ConnectStation(TCPSOCKET *sock, u_long ip, u_short port, u_long *metaint);
+
+/**
+* \fn reload_display
+* \brief refreshes the text on the display
+* \return void
+*/
 void reload_display(void);
 
+/**
+* \brief protected description containing artist+titel extracted from meta-inf
+*/
 extern volatile char Description[];
 
 #ifdef __cplusplus
