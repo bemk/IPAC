@@ -29,7 +29,7 @@
 #include "watchdog.h"
 #include "flash.h"
 #include "spidrv.h"
-#include "testStream.h"
+#include "processStream.h"
 #include "vs10xx.h"
 #include <time.h>
 #include "rtc.h"
@@ -38,7 +38,6 @@
 
 TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufsiz);
 int is_running = 0;
-
 /* contains the args for mp3streamthread*/
 typedef struct {
         char *name;
@@ -51,7 +50,6 @@ typedef struct {
 /* Stuff for the internet connection*/
 TCPSOCKET *sock;
 FILE *stream;
-//    u_long baud = DBG_BAUDRATE;
 u_long radio_ip;
 u_short tcpbufsiz = TCPIP_BUFSIZ;
 u_long rx_to = TCPIP_READTIMEOUT;
@@ -60,16 +58,29 @@ u_long metaint;
 
 THREAD(PlayMp3StreamThread, arg)
 {
-        thread_args *my_args;
-        my_args = (thread_args *) arg;
-        NutSleep(my_args->sleeptime);
-        PlayMp3Stream((FILE *)my_args->stream, my_args->metaint);
-        NutSleep(my_args->sleeptime);
-        fclose((FILE *)my_args->stream);
-        NutSleep(my_args->sleeptime);
+        //TCPSOCKET *sock;
+	u_short mss = 1460;
+	u_long rx_to = 3000;
+	u_short tcpbufsiz = 8000;
+	FILE *stream;
+	sock = SocketCreate(sock,mss,rx_to,tcpbufsiz);
+	
+	/*
+        * Connect the radio station.
+        */
+        u_long radio_ip = inet_addr(RADIO_IPADDR);
+        stream = ConnectStation(sock, radio_ip, RADIO_PORT, &metaint);
+	
+	
+	if(stream)
+	{
+		PlayMp3Stream(stream,metaint);
+		fclose(stream);
+        }
+        
+        NutTcpCloseSocket(sock);
         NutThreadExit();
-        for(;;)
-                NutSleep(0xFFFF);
+        for (;;);
 }
 
 TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufsiz)
@@ -92,45 +103,28 @@ TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufs
         return sock;
 }
 	
- int start_playing()
- {
+int start_playing()
+{
         if(is_running == 0 )
         {		
-		
-		
+				
 		is_running = 1;
-		
-                /*
-                 * Create a TCP socket.
-                 */
-                sock = SocketCreate(sock,mss,rx_to,tcpbufsiz);
-
-                /*
-                 * Connect the radio station.
-                 */
-                u_long radio_ip = inet_addr(RADIO_IPADDR);
-                stream = ConnectStation(sock, radio_ip, RADIO_PORT, &metaint);
-                if(stream) {
-                        thread_args *arguments;
-                        arguments = malloc(sizeof(thread_args));
-                        arguments->name = "mp3 stream";
-                        arguments->stream = (FILE *)stream;
-                        arguments->metaint = metaint;
-                        arguments->sleeptime = 100;
-         
-                        NutThreadCreate(arguments->name, PlayMp3StreamThread, 
-                                                                arguments, 512);
-                }
+		playing = 1;
+                NutThreadCreate("mp3Stream" , PlayMp3StreamThread, NULL, 256);
+             
 	}
 	else if(is_running == 1)
 	{
 
 		printf("already running + %s", Description );
-	//	reload_display();
-		LcdWriteLine2("FAGBALLS");
-		//return sock; 
 		return 0;
 	
 	}
         return 0;
+}
+
+void stop_stream(struct menu* this)
+{      
+        is_running = 0;
+        playing = 0;   
 }

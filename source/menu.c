@@ -6,7 +6,8 @@
 #include "rtc.h"
 
 #include "startstream.h"
-#include "testStream.h"
+#include "processStream.h" 
+#include "vs10xx.h"
 
 /**
 * \todo Rename functions and rewrite some code regarding navigation towards a 
@@ -49,6 +50,8 @@ static void time_btn_ok(struct menu* this);
 static void goose_menu_init(void);
 static void home_mnu_init(void);
 
+static void volume_up(struct menu* this);
+static void volume_down(struct menu* this);
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
                         "14","15","16","17","18","19","20","21","22","23"};
@@ -599,7 +602,6 @@ static void nav_to_preset_child(struct menu* this)
                 this->std_child_ctor();
         msg_updated = TRUE;
 }
-
 /**
  * \fn play_menu_init
  * \brief The play menu used by both stream and sd music.
@@ -617,8 +619,33 @@ static void play_menu_init()
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
         std_mnu_buttons(mnu);
+        mnu->btn_up = volume_up;
+        mnu->btn_down = volume_down;
+        mnu->btn_alt = stop_stream;
 }
 
+
+/**
+* volume_up, adds the volume
+* 
+*/
+int i;
+static void volume_up(struct menu* this)
+{
+        i -= 5;
+        VsSetVolume(i,i);
+}
+
+
+/**
+* volume_down, lowers the volume
+* 
+*/
+static void volume_down(struct menu* this)
+{ 
+        i += 5;
+        VsSetVolume(i,i);
+}
 /**
  * \fn alarm_menu_init
  * \brief The main alarm clock menu.
