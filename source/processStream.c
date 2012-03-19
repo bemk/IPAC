@@ -196,16 +196,17 @@ int ProcessMetaData(FILE *stream)
                         {
 // this code checks for the end of the meta title, it ends with a '; if this is
 // reached, break the line !                        
-                                if(mbuf[i] != '\'' && mbuf[i+1] != ';')
-                                {
-                                        Description[j] = mbuf[i];
-                                        j++;
-                                }
-                                else 
-                                {
+                                if(mbuf[i] == '\'' && mbuf[i+1] == ';')
+                                {       
                                         j++;
                                         Description[j] = '\0';
                                         break;
+                                        
+                                }
+                                else 
+                                {
+                                        Description[j] = mbuf[i];
+                                        j++;
                                 }
                         }
                 }
