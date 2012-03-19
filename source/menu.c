@@ -53,12 +53,23 @@ char blink;
 
 THREAD(mnu_thread, args)
 {
-	NutThreadSetPriority(10);
-	for (;;)
-	{
-		NutSleep(THREAD_SLEEP_TIME);
-		if (mnu == NULL)
-			continue;
+        NutThreadSetPriority(10);
+        for (;;)
+        {
+                NutSleep(THREAD_SLEEP_TIME);
+                if (mnu == NULL)
+                        continue;
+                if (msg_updated)
+                {
+                        LcdWriteLine1(mnu->top_line);
+                        LcdWriteLine2(mnu->messages[mnu->message_id]);
+                        msg_updated = FALSE;
+                }
+                if (mnu->show_time)
+                {
+                        LcdWriteLine2(getTime("XX:YY:ZZ"));
+                        continue;
+                }
                 if (mnu->clock_set)
                 {
                         LcdWriteLine1(mnu->top_line);
@@ -75,26 +86,19 @@ THREAD(mnu_thread, args)
                                                            mnu->hVal, mnu->sVal);
                                         break;
                                 case 2:
-                                        sprintf(clock_msg, "%02d:%02d:  ", 
+                                        sprintf(clock_msg, "%02d:%02d:  ",
                                                           mnu->hVal, mnu->mVal);
                                         break;
                                 }
                         }
                         else
-                                sprintf(clock_msg, "%02d:%02d:%02d", 
+                                sprintf(clock_msg, "%02d:%02d:%02d",
                                                mnu->hVal, mnu->mVal, mnu->sVal);
                         blink += 4;
                         blink %= BLINK_IT;
                         LcdWriteLine2(clock_msg);
                         continue;
                 }
-                if (msg_updated)
-                {
-                        LcdWriteLine1(mnu->top_line);
-                        LcdWriteLine2(mnu->messages[mnu->message_id]);
-                        msg_updated = FALSE;
-                }
-                
 	}
 }
 
@@ -218,12 +222,12 @@ static void std_mnu_buttons(struct menu* this)
  */
 void main_mnu_init()
 {
-	if (mnu == NULL)
-		mnu = malloc(sizeof(*mnu));
-	if (mnu == NULL)
-		return;
-	main_mnu_build();
-	NutThreadCreate("Menu", mnu_thread, NULL, 1024);
+        if (mnu == NULL)
+                mnu = malloc(sizeof(*mnu));
+        if (mnu == NULL)
+                return;
+        home_mnu_init();
+        NutThreadCreate("Menu", mnu_thread, NULL, 1024);
 }
 
 /**
@@ -232,16 +236,16 @@ void main_mnu_init()
  */
 static void main_mnu_build()
 {
-	memset(mnu, 0, sizeof(struct menu));
-	mnu->top_line = "Menu";
-	mnu->messages[0] = "Timezone";
-	mnu->messages[1] = "Clock";
-	mnu->messages[2] = "Entertainment";
-	mnu->messages[3] = "Alarm";
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Menu";
+        mnu->messages[0] = "Timezone";
+        mnu->messages[1] = "Clock";
+        mnu->messages[2] = "Entertainment";
+        mnu->messages[3] = "Alarm";
         mnu->messages[4] = "Goose";
-	mnu->no_messages = 5;
-	mnu->message_id = 0;
-	std_mnu_buttons(mnu);
+        mnu->no_messages = 5;
+        mnu->message_id = 0;
+        std_mnu_buttons(mnu);
         mnu->btn_right = std_btn_right;
 }
 
@@ -273,7 +277,7 @@ static void clock_menu_init()
                 return;
         memset(mnu, 0, sizeof(struct menu));
         mnu->top_line = "Clock";
-        std_mnu_buttons(mnu);       
+        std_mnu_buttons(mnu);
         printf("uren readbyte: %d\n", BCD2BIN(x1205ReadByte(0x32) & 0x3F));
         mnu->hVal = BCD2BIN(x1205ReadByte(0x32) & 0x3F);
         mnu->mVal = BCD2BIN(x1205ReadByte(0x31));
@@ -361,7 +365,7 @@ static void time_btn_left(struct menu* this)
  * \brief navigate between hours, minutes and seconds
  */
 static void time_btn_right(struct menu* this)
-{ 
+{
         this->time_field ++;
         if (this->time_field > 2)
                 this->time_field = 0;
@@ -377,11 +381,11 @@ static void time_btn_ok(struct menu* this)
 {
         x1205WriteByte(0x30, BIN2BCD(this->sVal));
         x1205WriteByte(0x31, BIN2BCD(this->mVal));
-        x1205WriteByte(0x32, BIN2BCD(this->hVal) | 0x80);   
-        
+        x1205WriteByte(0x32, BIN2BCD(this->hVal) | 0x80);
+
         printf("this-> hVal: %d\n", this->hVal);
         printf("uren ok: %d\n", this->hVal);
-        printf("minuten ok: %d\n", this->mVal);        
+        printf("minuten ok: %d\n", this->mVal);
         msg_updated = TRUE;
         std_btn_left(this);
 }
@@ -682,8 +686,9 @@ static void home_mnu_init()
                 return;
         memset(mnu, 0, sizeof(struct menu));
         std_mnu_buttons(mnu);
-        mnu->top_line = "internet based alarm clock";
+        mnu->top_line = "IPAC";
         mnu->messages[0] = "";
+        mnu->no_messages = 1;
         mnu->show_time = TRUE;
         mnu->btn_esc = home_btn_esc;
         mnu->btn_alt = home_btn_alt;
