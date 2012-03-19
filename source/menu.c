@@ -39,6 +39,7 @@ static void time_btn_right(struct menu* this);
 static void time_btn_ok(struct menu* this);
 
 static void goose_menu_init(void);
+static void home_mnu_init(void);
 
 char* itoc[24] = {"0","1","2","3","4","5","6","7","8","9","10","11","12","13",
                         "14","15","16","17","18","19","20","21","22","23"};
@@ -126,7 +127,7 @@ static void tz_btn_down(struct menu* this)
  */
 static void std_btn_esc(struct menu* this)
 {
-        main_mnu_build();
+        home_mnu_init();
         msg_updated = TRUE;
         return;
 }
@@ -172,28 +173,28 @@ static void std_btn_left(struct menu* this)
  */
 static void std_btn_right(struct menu* this)
 {
-	switch(mnu->message_id)
-	{
-	case 0:
-		tz_menu_init();
-		break;
-	case 1:
-		clock_menu_init();
-		break;
-	case 2:
-		entertainment_menu_init();
-		break;
-	case 3:
-		alarm_menu_init();
-		break;
+        switch(mnu->message_id)
+        {
+        case 0:
+                tz_menu_init();
+                break;
+        case 1:
+                clock_menu_init();
+                break;
+        case 2:
+                entertainment_menu_init();
+                break;
+        case 3:
+                alarm_menu_init();
+                break;
         case 4:
                 goose_menu_init();
                 break;
-	case 5:
-	case 6:
-	case 7:
-	default:
-		break;
+        case 5:
+        case 6:
+        case 7:
+        default:
+                break;
         }
         msg_updated = TRUE;
 }
@@ -641,3 +642,43 @@ static void goose_menu_init()
         mnu->parent_ctor = main_mnu_build;
         std_mnu_buttons(mnu);
 }
+
+/**
+ * \fn home_btn_alt
+ * \brief The button to enter the main menu
+ */
+static void home_btn_alt(struct menu* this)
+{
+        entertainment_menu_init();
+        msg_updated = TRUE;
+        return;
+}
+
+/**
+ * \fn home_btn_esc
+ * \brief Escape the home menu
+ */
+static void home_btn_esc(struct menu* this)
+{
+        main_mnu_build();
+        msg_updated = TRUE;
+        return;
+}
+
+/**
+ * \fn home_mnu_init
+ * \brief Load the home screen
+ */
+static void home_mnu_init()
+{
+        if (mnu == NULL)
+                return;
+        memset(mnu, 0, sizeof(struct menu));
+        std_mnu_buttons(mnu);
+        mnu->top_line = "internet based alarm clock";
+        mnu->messages[0] = "";
+        mnu->show_time = TRUE;
+        mnu->btn_esc = home_btn_esc;
+        mnu->btn_alt = home_btn_alt;
+}
+
