@@ -133,26 +133,26 @@ static void std_btn_esc(struct menu* this)
 }
 
 /**
- * \fn std_btn_up
- * \brief Standard move up in the current menu.
- */
-static void std_btn_up(struct menu* this)
-{
-        this->message_id++;
-        if(this->message_id >= this->no_messages)
-                this->message_id = 0;
-        msg_updated = TRUE;
-}
-
-/**
  * \fn std_btn_down
  * \brief Standard move down in the current menu.
  */
-static void std_btn_down(struct menu* this)
+static void std_btn_up(struct menu* this)
 {
         this->message_id--;
         if(this->message_id < 0)
                 this->message_id = this->no_messages - 1;
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn std_btn_up
+ * \brief Standard move up in the current menu.
+ */
+static void std_btn_down(struct menu* this)
+{
+        this->message_id++;
+        if(this->message_id >= this->no_messages)
+                this->message_id = 0;
         msg_updated = TRUE;
 }
 
