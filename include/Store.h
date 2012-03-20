@@ -9,9 +9,11 @@ extern "C" {
 
 void store_tests( void );
 
-void readByte(uint8_t *adr);
-void readWord(uint16_t adr);
-void writeWord(uint16_t *adr, uint16_t data);
+void readByte(void* adr);
+void readWord(void* adr, uint16_t* data);
+void writeWord(void* adr, uint16_t data);
+void eeprom_read(void* data, void* addr, size_t num);
+void eeprom_write(void* data, void* out, size_t num);
 
 #ifdef __cplusplus
 }
