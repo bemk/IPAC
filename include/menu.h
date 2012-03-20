@@ -76,6 +76,7 @@ struct menu {
         int mVal;
         int sVal;
         bool clock_set;
+        bool alarm_set;
 };
 
 void main_mnu_init(void);

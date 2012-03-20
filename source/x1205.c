@@ -37,10 +37,9 @@ int x1205WriteNBytes(unsigned char addr, unsigned char *data, u_char cnt )
  * Write N bytes to RTC starting at addr.
  *
  */
-{
+{       
         int retval = 0;
         int idx  = 0;
-
         u_char *wrBuf = (u_char *)malloc ((cnt+3) * sizeof(u_char));
 
         wrBuf[0] = 0;
@@ -49,7 +48,7 @@ int x1205WriteNBytes(unsigned char addr, unsigned char *data, u_char cnt )
         {
                 wrBuf[idx+2] = data[idx];
         }
-
+        
         TwMasterTransact(I2C_SLA_RTC, wrBuf, cnt+2, 0, 0, NUT_WAIT_INFINITE);
 
         free(wrBuf);
@@ -81,9 +80,6 @@ int x1205ReadNByte(u_char addr, u_char *buf, u_char cnt )
         return retval;
 }
 
-
-
-
 char x1205ReadByte(unsigned char addr)
 {
         int retval = 1;
@@ -99,10 +95,6 @@ char x1205ReadByte(unsigned char addr)
         {
                 retval = -1;
                 LogMsg_P(LOG_INFO, PSTR("Error x1205readByte()"));
-        }
-        else
-        {
-
         }
         return readBuffer[0];
 }

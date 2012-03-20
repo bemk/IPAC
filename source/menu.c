@@ -47,6 +47,12 @@ static void time_btn_left(struct menu* this);
 static void time_btn_right(struct menu* this);
 static void time_btn_ok(struct menu* this);
 
+static void alarm_btn_up(struct menu* this);
+static void alarm_btn_down(struct menu* this);
+static void alarm_btn_left(struct menu* this);
+static void alarm_btn_right(struct menu* this);
+static void alarm_btn_ok(struct menu* this);
+
 static void goose_menu_init(void);
 static void home_mnu_init(void);
 
@@ -81,7 +87,7 @@ THREAD(mnu_thread, args)
                         LcdWriteLine2(getTime("XX:YY:ZZ"));
                         continue;
                 }
-                if (mnu->clock_set)
+                if (mnu->clock_set || mnu->alarm_set)
                 {
                         LcdWriteLine1(mnu->top_line);
                         if (blink < BLINK_IT/4)
@@ -404,11 +410,8 @@ static void clock_menu_init()
         memset(mnu, 0, sizeof(struct menu));
         mnu->top_line = "Clock";
         std_mnu_buttons(mnu);
-        printf("uren readbyte: %d\n", BCD2BIN(x1205ReadByte(0x32) & 0x3F));
         mnu->hVal = BCD2BIN(x1205ReadByte(0x32) & 0x3F);
         mnu->mVal = BCD2BIN(x1205ReadByte(0x31));
-        printf("uren clock_menu: %d\n", mnu->hVal);
-        printf("minuten clock_menu: %d\n", mnu->mVal);
         mnu->parent_ctor = main_mnu_build;
         mnu->clock_set = TRUE;
         mnu->btn_up = time_btn_up;
@@ -509,9 +512,6 @@ static void time_btn_ok(struct menu* this)
         x1205WriteByte(0x31, BIN2BCD(this->mVal));
         x1205WriteByte(0x32, BIN2BCD(this->hVal) | 0x80);
 
-        printf("this-> hVal: %d\n", this->hVal);
-        printf("uren ok: %d\n", this->hVal);
-        printf("minuten ok: %d\n", this->mVal);
         msg_updated = TRUE;
         std_btn_left(this);
 }
@@ -695,12 +695,126 @@ static void set_alarm_time_menu()
                 return;
         memset(mnu, 0, sizeof(struct menu));
         mnu->top_line = "Set Alarm";
-        mnu->messages[0] = "HH:MM";
+        mnu->messages[0] = "HH:MM:SS";
         mnu->no_messages = 1;
         mnu->parent_ctor = alarm_menu_init;
         std_mnu_buttons(mnu);
-        mnu->btn_right = select_alarm_type;
+        mnu->alarm_set = TRUE;
+        mnu->btn_up = alarm_btn_up;
+        mnu->btn_down = alarm_btn_down;
+        mnu->btn_left = alarm_btn_left;
+        mnu->btn_right = alarm_btn_right;
+        mnu->btn_ok = alarm_btn_ok;
 }
+
+/**
+ * \fn time_btn_ok
+ * \brief save the hours, minutes and seconds
+ */
+static void alarm_btn_ok(struct menu* this)
+{
+        x1205Enable();
+        u_char buf[3];
+        buf[2] = DEC2BCD(this->hVal) | 0x80; 	// HRA1
+	buf[1] = DEC2BCD(this->mVal) | 0x80; 	// MNA1
+	buf[0] = DEC2BCD(this->sVal); 		// SCA1
+
+        x1205WriteNBytes(0x08, buf, 3);
+        NutSleep(100);
+        x1205ReadNByte(0x08, buf, 3 );
+        printf("alarm: %02d:%02d:%02d", BCD2DEC(buf[2] & 0x7F), BCD2DEC(buf[1] & 0x7F), BCD2DEC(buf[0] & 0x7F ));
+        msg_updated = TRUE;
+        
+        printf("buffer: %02d:%02d:%02d\n",  BCD2DEC(buf[2] & 0x7F), BCD2DEC(buf[1] & 0x7F), BCD2DEC(buf[0] & 0x7F ));
+
+        printf("Alarm @ (BTN) [%02d:%02d:%02d]\n", 
+        BCD2DEC(buf[2] & 0x7F), BCD2DEC(buf[1] & 0x7F), BCD2DEC(buf[0] & 0x7F ));
+        select_alarm_type(this);
+}
+
+
+/**
+ * \fn time_btn_up
+ * \brief raises the hours, minutes or seconds
+ */
+static void alarm_btn_up(struct menu* this)
+{
+        switch(this->time_field)
+	{
+	case 0:
+		this->hVal++;
+                this->hVal %= 24;
+		break;
+	case 1:
+		this->mVal++;
+                this->mVal %= 60;
+		break;
+	case 2:
+                this->sVal++;
+                this->sVal %= 60;
+                break;
+	default:
+		break;
+        }
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_down
+ * \brief decrease the hours, minutes or seconds
+ */
+static void alarm_btn_down(struct menu* this)
+{
+        switch(this->time_field)
+	{
+	case 0:
+		this->hVal--;
+                if(this->hVal < 0)
+                        this->hVal = 23;
+		break;
+	case 1:
+		this->mVal--;
+                if(this->mVal < 0)
+                        this->mVal = 59;
+		break;
+	case 2:
+                this->sVal--;
+                if(this->sVal < 0)
+                        this->sVal = 59;
+                break;
+	default:
+		break;
+        }
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_left
+ * \brief navigate between hours, minutes and seconds
+ */
+static void alarm_btn_left(struct menu* this)
+{
+        this->time_field --;
+        if (this->time_field < 0)
+                this->time_field = 2;
+
+        msg_updated = TRUE;
+}
+
+/**
+ * \fn time_btn_right
+ * \brief navigate between hours, minutes and seconds
+ */
+static void alarm_btn_right(struct menu* this)
+{
+        this->time_field ++;
+        if (this->time_field > 2)
+                this->time_field = 0;
+
+        msg_updated = TRUE;
+}
+
+
 
 /**
  * \fn select_alarm_type
