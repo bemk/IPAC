@@ -12,51 +12,50 @@
 #include "log.h"
 #include "Store.h"
 
+
 #define LOG_MODULE  LOG_MAIN_MODULE
 
-unsigned char data;
-u_int numbers = 46;
 
 
 void store_tests(void)
 {
-        writeWord(numbers, 'ha');
-        readWord(numbers);      
+        writeWord(46,0x6948);
+        readWord(46);
 }
 
 void readByte(uint8_t *adr)
 {
         uint8_t ByteOfData;
         ByteOfData = eeprom_read_byte((uint8_t*)adr);
-        printf("\n%c\n", ByteOfData);       
+        printf("\n%c\n", ByteOfData);  
+        
 }
 /**
 *Reading word from eeprom.
 */
 void readWord(uint16_t adr)
 {
+        char str[] = {0,0,0};
         uint16_t wordOfData;
         wordOfData = eeprom_read_word((uint16_t*)adr);
-        for(int i = 0; i <= sizeof(wordOfData);i++)
-        {
-                
-        }
-        printf("\nThe Words is %d\n", sizeof(wordOfData));
+        str[0] = (wordOfData & 0xFF);
+        str[1] = ((wordOfData >> 8) & 0xFF);
+        printf("\nThe Words is %s\n", str);
+     
 }
 /**
 *Write word to eeprom.
 */
-void writeWord(uint16_t *adr, char data)
+void writeWord(uint16_t *adr, uint16_t data)
 {
         eeprom_write_word(adr,data);
-        
 }
 
 void readBlock(void)
 {
         uint8_t StringOfData[10];
-        eeprom_read_block((void*)&StringOfData, (const void*)12, 10); 
-        printf("\nSucces\n%s\n", StringOfData);
+        eeprom_read_block((void*)&StringOfData, (const void*)46, 10); 
+        printf("\n Words are %c\n", StringOfData);
 }
 
 
