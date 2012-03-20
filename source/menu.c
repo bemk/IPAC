@@ -52,6 +52,7 @@ static void alarm_btn_down(struct menu* this);
 static void alarm_btn_left(struct menu* this);
 static void alarm_btn_right(struct menu* this);
 static void alarm_btn_ok(struct menu* this);
+void check_alarm(void);
 
 static void goose_menu_init(void);
 static void home_mnu_init(void);
@@ -705,6 +706,27 @@ static void set_alarm_time_menu()
         mnu->btn_left = alarm_btn_left;
         mnu->btn_right = alarm_btn_right;
         mnu->btn_ok = alarm_btn_ok;
+}
+
+void check_alarm()
+{
+        char* tmp1 = getTime("00:00:00");
+        NutSleep(100);
+        char* tmp2 = getAlarm("AA:BB:CC");
+        printf("Str1: %s\t Str2: %s\n", tmp1, tmp2);
+        if(strcmp(tmp1, tmp2) == 0)
+        {
+                for(;;)
+                {
+                        VsBeep(100,100);
+                        NutSleep(300);
+                        if(KbGetKey() == 9)
+                        {
+                                break;
+                        }
+                
+                }
+        }
 }
 
 /**
