@@ -82,6 +82,7 @@ struct menu
 void main_mnu_init(void);
 void check_alarm(void);
 
+
 extern struct menu *mnu;
 extern char* itoc[24];
 

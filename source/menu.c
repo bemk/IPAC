@@ -50,6 +50,10 @@ static void alarm_btn_left(struct menu* this);
 static void alarm_btn_right(struct menu* this);
 static void alarm_btn_ok(struct menu* this);
 void check_alarm(void);
+/**
+*       set_alarm_off: wordt niet gebruikt
+*/
+//static void set_alarm_off(struct menu* this);
 
 static void goose_menu_init(void);
 static void home_mnu_init(void);
@@ -407,8 +411,8 @@ static void clock_menu_init()
         memset(mnu, 0, sizeof(struct menu));
         mnu->top_line = "Clock";
         std_mnu_buttons(mnu);
-        mnu->hVal = BCD2BIN(x1205ReadByte(0x32) & 0x3F);
-        mnu->mVal = BCD2BIN(x1205ReadByte(0x31));
+        mnu->hVal = BCD2BIN(x1205ReadByte(X12RTC_HR) & 0x3F);
+        mnu->mVal = BCD2BIN(x1205ReadByte(X12RTC_MN));
         mnu->parent_ctor = main_mnu_build;
         mnu->clock_set = TRUE;
         mnu->btn_up = time_btn_up;
@@ -505,9 +509,9 @@ static void time_btn_right(struct menu* this)
  */
 static void time_btn_ok(struct menu* this)
 {
-        x1205WriteByte(0x30, BIN2BCD(this->sVal));
-        x1205WriteByte(0x31, BIN2BCD(this->mVal));
-        x1205WriteByte(0x32, BIN2BCD(this->hVal) | 0x80);
+        x1205WriteByte(X12RTC_SC, BIN2BCD(this->sVal));
+        x1205WriteByte(X12RTC_MN, BIN2BCD(this->mVal));
+        x1205WriteByte(X12RTC_HR, BIN2BCD(this->hVal) | 0x80);
 
         msg_updated = TRUE;
         std_btn_left(this);
@@ -710,7 +714,8 @@ static void set_alarm_time_menu()
                 return;
         memset(mnu, 0, sizeof(struct menu));
         mnu->top_line = "Set Alarm";
-        mnu->messages[0] = "HH:MM:SS";
+        mnu->hVal = BCD2BIN(x1205ReadByte(X12RTC_HRA1) & 0x7F);
+        mnu->mVal = BCD2BIN(x1205ReadByte(X12RTC_MNA1) & 0x7F);
         mnu->no_messages = 1;
         mnu->parent_ctor = alarm_menu_init;
         std_mnu_buttons(mnu);
@@ -725,7 +730,7 @@ static void set_alarm_time_menu()
 void check_alarm()
 {
         char* tmp1 = getTime("00:00:00");
-        NutSleep(100);
+        NutSleep(THREAD_SLEEP_TIME);
         char* tmp2 = getAlarm("AA:BB:CC");
         printf("Str1: %s\t Str2: %s\n", tmp1, tmp2);
         if(strcmp(tmp1, tmp2) == 0)
@@ -734,7 +739,7 @@ void check_alarm()
                 {
                         VsBeep(100,100);
                         NutSleep(300);
-                        if(KbGetKey() == 9)
+                        if(KbGetKey() == KEY_OK)
                         {
                                 break;
                         }
@@ -757,15 +762,21 @@ static void alarm_btn_ok(struct menu* this)
 
         x1205WriteNBytes(0x08, buf, 3);
         NutSleep(100);
-        x1205ReadNByte(0x08, buf, 3 );
-        printf("alarm: %02d:%02d:%02d", BCD2DEC(buf[2] & 0x7F), BCD2DEC(buf[1] & 0x7F), BCD2DEC(buf[0] & 0x7F ));
         msg_updated = TRUE;
-        
-        printf("buffer: %02d:%02d:%02d\n",  BCD2DEC(buf[2] & 0x7F), BCD2DEC(buf[1] & 0x7F), BCD2DEC(buf[0] & 0x7F ));
+}
 
-        printf("Alarm @ (BTN) [%02d:%02d:%02d]\n", 
-        BCD2DEC(buf[2] & 0x7F), BCD2DEC(buf[1] & 0x7F), BCD2DEC(buf[0] & 0x7F ));
-        select_alarm_type(this);
+/**
+*       werkt nog niet, dus niet geimplementeerd!
+*/
+static void set_alarm_off(struct menu* this)
+{
+        x1205Enable();
+        u_char buf[3];
+        buf[2] = DEC2BCD(this->hVal); 	// HRA1
+	buf[1] = DEC2BCD(this->mVal); 	// MNA1
+	buf[0] = DEC2BCD(this->sVal); 		// SCA1
+        x1205WriteNBytes(X12RTC_SCA1, buf, 3);
+        home_mnu_init();
 }
 
 
@@ -850,8 +861,6 @@ static void alarm_btn_right(struct menu* this)
         msg_updated = TRUE;
 }
 
-
-
 /**
  * \fn select_alarm_type
  * \brief Standard move to alarm type selection menu.
@@ -913,6 +922,7 @@ static void save_alarm_type(struct menu* this)
                 break;
         case 1:
                 sd_menu_init();
+                mnu->parent_ctor = alarm_menu_init;
                 mnu->parent_ctor = alarm_menu_init;
                 mnu->std_child_ctor = save_menu_init;
                 break;
