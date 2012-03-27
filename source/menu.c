@@ -565,11 +565,11 @@ static void entertainment_btn_right(struct menu* this)
  */
 static void stream_menu_init()
 {
-	if(mnu == NULL)
-		return;
-	memset(mnu, 0, sizeof(struct menu));
-	mnu->top_line = "Internet Radio";
-	mnu->messages[0] = "Stream";
+        if(mnu == NULL)
+                return;
+        memset(mnu, 0, sizeof(struct menu));
+        mnu->top_line = "Internet Radio";
+        mnu->messages[0] = "JpopSuki Radio!";
         mnu->no_messages = 1;
 	mnu->parent_ctor = entertainment_menu_init;
         std_mnu_buttons(mnu);
