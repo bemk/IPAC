@@ -509,6 +509,8 @@ static void time_btn_right(struct menu* this)
  */
 static void time_btn_ok(struct menu* this)
 {
+        x1205Enable();
+
         x1205WriteByte(X12RTC_SC, BIN2BCD(this->sVal));
         x1205WriteByte(X12RTC_MN, BIN2BCD(this->mVal));
         x1205WriteByte(X12RTC_HR, BIN2BCD(this->hVal) | 0x80);
@@ -765,9 +767,10 @@ static void alarm_btn_ok(struct menu* this)
         msg_updated = TRUE;
 }
 
+
 /**
 *       werkt nog niet, dus niet geimplementeerd!
-*/
+*
 static void set_alarm_off(struct menu* this)
 {
         x1205Enable();
@@ -777,8 +780,7 @@ static void set_alarm_off(struct menu* this)
 	buf[0] = DEC2BCD(this->sVal); 		// SCA1
         x1205WriteNBytes(X12RTC_SCA1, buf, 3);
         home_mnu_init();
-}
-
+}*/
 
 /**
  * \fn time_btn_up
@@ -886,6 +888,7 @@ static void alarm_on_off_menu()
         mnu->no_messages = 2;
         mnu->parent_ctor = alarm_menu_init;
         std_mnu_buttons(mnu);
+        home_mnu_init();
 }
 
 /**
