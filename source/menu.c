@@ -8,7 +8,7 @@
 #include "startstream.h"
 #include "processStream.h" 
 #include "vs10xx.h"
-
+#include "Store.h"
 /**
 * \todo Rename functions and rewrite some code regarding navigation towards a 
 * single child.
@@ -66,7 +66,7 @@ struct menu *mnu = NULL;
 bool msg_updated = TRUE;
 char* clock_msg = "XX:YY:ZZ";
 char blink;
-int* volume;
+//int* volume;
 #define BLINK_IT 10
 
 THREAD(mnu_thread, args)
@@ -638,6 +638,9 @@ static void volume_up(struct menu* this)
         {
         volume -= 5;        
         VsSetVolume((int)volume,(int)volume);
+        eeprom.volume = volume;
+        store_settings();
+        printf("Vol: %X\n", volume);
         }
         else
         {
@@ -658,6 +661,9 @@ static void volume_down(struct menu* this)
         {
         volume += 5;        
         VsSetVolume((int)volume,(int)volume);
+        eeprom.volume = volume;
+        store_settings();
+        printf("Vol: %X\n", volume);
         }
         else
         {

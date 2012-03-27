@@ -14,15 +14,26 @@
 
 
 #define LOG_MODULE  LOG_MAIN_MODULE
+<<<<<<< HEAD
 
 
 
+=======
+#define SETTINGS_ADDR (void*)0x100
+
+char* text = "blaat";
+struct eeprom_data eeprom;
+>>>>>>> 011b8cc... Committing test for working volume written to EEPROM. Volume is saved and restored.
 void store_tests(void)
 {
         char* tst = "XXXXX";
         //writeWord((void*)46, 0x6948);
         //readWord((void*)46, (void*)tst);
+<<<<<<< HEAD
         eeprom_write("blaat", (void*)46, 5);
+=======
+        eeprom_write(text, (void*)46, 5);
+>>>>>>> 011b8cc... Committing test for working volume written to EEPROM. Volume is saved and restored.
         eeprom_read(tst, (void*)46, 5);
         printf("\nRead %s\n", tst);
 }
@@ -74,6 +85,21 @@ void eeprom_write(void* data, void* out, size_t num)
         }
 }
 
+<<<<<<< HEAD
+=======
+void store_settings(void)
+{
+        eeprom_write(&eeprom, SETTINGS_ADDR, sizeof(eeprom));
+}
+
+void restore_settings(void)
+{
+        eeprom_read(&eeprom, SETTINGS_ADDR, sizeof(eeprom));
+}
+
+
+
+>>>>>>> 011b8cc... Committing test for working volume written to EEPROM. Volume is saved and restored.
 
 
 

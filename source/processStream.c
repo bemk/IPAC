@@ -36,7 +36,7 @@
 #include "wan.h"
 #include "startstream.h"
 #include "menu.h"
-
+#include "Store.h"
 /*
  * Description String
  */
@@ -46,7 +46,7 @@
  * Title String
  */
  volatile char Title[40];
- int *volume;
+ int volume;
  
 /*!
  * \brief Connect to a radio station.
@@ -262,7 +262,10 @@ void PlayMp3Stream(FILE *stream, u_long metaint)
                 puts("Error: MP3 hardware init failed");
                 return;
         }
-        VsSetVolume((int)volume,(int)volume);
+        
+        
+        volume = eeprom.volume;
+        VsSetVolume(volume,volume);
         /* 
         * Reset the MP3 buffer. 
         */

@@ -60,7 +60,7 @@ struct menu {
         int no_messages;
         int mnu_cnt;
         bool show_time;
-        int* volume;
+        int volume;
         /**
         * \var time_field
         * \brief denotes the time field to change

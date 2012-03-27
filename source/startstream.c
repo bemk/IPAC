@@ -39,7 +39,7 @@
 
 TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufsiz);
 int is_running = 0;
-int *volume;
+//int *volume;
 /* contains the args for mp3streamthread*/
 typedef struct {
         char *name;

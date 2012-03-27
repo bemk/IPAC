@@ -160,6 +160,8 @@ void reload_display(void);
 */
 extern volatile char Description[];
 
+extern int volume;
+
 #ifdef __cplusplus
 }
 #endif
