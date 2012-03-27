@@ -130,4 +130,5 @@ void stop_stream(struct menu* this)
 {      
         is_running = 0;
         playing = 0;   
+        LcdWriteLine2("Stream is stopped");
 }

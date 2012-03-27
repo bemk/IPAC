@@ -654,7 +654,7 @@ static void volume_up(struct menu* this)
 */
 static void volume_down(struct menu* this)
 { 
-        if(volume != 255)
+        if((int)volume != 255)
         {
         volume += 5;        
         VsSetVolume((int)volume,(int)volume);
