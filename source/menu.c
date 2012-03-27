@@ -9,10 +9,7 @@
 #include "processStream.h" 
 #include "vs10xx.h"
 #include "Store.h"
-/**
-* \todo Rename functions and rewrite some code regarding navigation towards a 
-* single child.
-*/
+
 static void tz_btn_up(struct menu* this);
 static void tz_btn_down(struct menu* this);
 static void std_btn_up(struct menu* this);
@@ -66,7 +63,6 @@ struct menu *mnu = NULL;
 bool msg_updated = TRUE;
 char* clock_msg = "XX:YY:ZZ";
 char blink;
-//int* volume;
 #define BLINK_IT 10
 
 THREAD(mnu_thread, args)
@@ -604,6 +600,7 @@ static void nav_to_preset_child(struct menu* this)
                 this->std_child_ctor();
         msg_updated = TRUE;
 }
+
 /**
  * \fn play_menu_init
  * \brief The play menu used by both stream and sd music.
@@ -626,34 +623,29 @@ static void play_menu_init()
         mnu->btn_alt = stop_stream;
 }
 
-
 /**
-* volume_up, adds the volume
-* 
+* \fn volume_up
+* \brief Increases the volume.
 */
-
 static void volume_up(struct menu* this)
 {
         if(volume != 0)
         {
-        volume -= 5;        
-        VsSetVolume((int)volume,(int)volume);
-        eeprom.volume = volume;
-        store_settings();
-        printf("Vol: %X\n", volume);
+                volume -= 5;        
+                VsSetVolume((int)volume,(int)volume);
+                eeprom.volume = volume;
+                store_settings();
+                printf("Vol: %X\n", volume);
         }
         else
         {
-        return ;
+                return ;
         }
-      
-        
 }
 
-
 /**
-* volume_down, lowers the volume
-* 
+* \fn volume_down
+* \brief Decreases the volume.
 */
 static void volume_down(struct menu* this)
 { 
@@ -1004,4 +996,3 @@ static void home_mnu_init()
         mnu->btn_esc = home_btn_esc;
         mnu->btn_alt = home_btn_alt;
 }
-

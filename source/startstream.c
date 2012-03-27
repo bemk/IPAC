@@ -2,7 +2,6 @@
  *  
  *
  */
-
  
 #define LOG_MODULE  LOG_MAIN_MODULE
 
@@ -39,7 +38,6 @@
 
 TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufsiz);
 int is_running = 0;
-//int *volume;
 /* contains the args for mp3streamthread*/
 typedef struct {
         char *name;
@@ -47,7 +45,6 @@ typedef struct {
         u_long metaint;
         int sleeptime;
 }thread_args;
-
 
 /* Stuff for the internet connection*/
 TCPSOCKET *sock;
@@ -60,26 +57,21 @@ u_long metaint;
 
 THREAD(PlayMp3StreamThread, arg)
 {
-        //TCPSOCKET *sock;
 	u_short mss = 1460;
 	u_long rx_to = 3000;
 	u_short tcpbufsiz = 8000;
 	FILE *stream;
 	sock = SocketCreate(sock,mss,rx_to,tcpbufsiz);
 	
-	/*
-        * Connect the radio station.
-        */
+	/*Connect the radio station.*/
         u_long radio_ip = inet_addr(RADIO_IPADDR);
         stream = ConnectStation(sock, radio_ip, RADIO_PORT, &metaint);
-	
 	
 	if(stream)
 	{
 		PlayMp3Stream(stream,metaint);
 		fclose(stream);
         }
-        
         NutTcpCloseSocket(sock);
         NutThreadExit();
         for (;;);
@@ -93,9 +85,7 @@ TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufs
                for(;;);
         }
 
-        /* 
-        * Set socket options. Failures are ignored.
-        */
+        /*Set socket options. Failures are ignored.*/
         if (NutTcpSetSockOpt(sock, TCP_MAXSEG, &mss, sizeof(mss)))
                 printf("Sockopt MSS failed\n");
         if (NutTcpSetSockOpt(sock, SO_RCVTIMEO, &rx_to, sizeof(rx_to)))
@@ -108,20 +98,16 @@ TCPSOCKET* SocketCreate(TCPSOCKET *sock,u_short mss,u_long rx_to,u_short tcpbufs
 int start_playing()
 {
         if(is_running == 0 )
-        {		
-				
+        {
 		is_running = 1;
 		playing = 1;
                 
                 NutThreadCreate("mp3Stream" , PlayMp3StreamThread, NULL, 256);
-             
 	}
 	else if(is_running == 1)
 	{
-
-		printf("already running + %s", Description );
+		printf("Already running + %s", Description );
 		return 0;
-	
 	}
         return 0;
 }
@@ -130,5 +116,5 @@ void stop_stream(struct menu* this)
 {      
         is_running = 0;
         playing = 0;   
-        LcdWriteLine2("Stream is stopped");
+        LcdWriteLine2("Stream is stopping...");
 }

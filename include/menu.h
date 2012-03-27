@@ -10,7 +10,8 @@ extern "C" {
  * \brief The descriptor for the menu items
  */
 
-struct menu {
+struct menu 
+{
         /**
          * \fn btn1
          * \fn btn2
@@ -43,7 +44,6 @@ struct menu {
          */
         void (*parent_ctor)(void);
         void (*std_child_ctor)(void);
-
         /**
          * \var top_line
          * \brief The stationary line at the top of the screen

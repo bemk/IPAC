@@ -6,8 +6,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-<<<<<<< HEAD
-=======
 /**
  * \struct eeprom_data 
  * \brief Standard data structure for permanent data storage
@@ -38,23 +36,17 @@ struct eeprom_data{
         uint8_t alarm_type;
         uint8_t alarm_type2;
 };
->>>>>>> 011b8cc... Committing test for working volume written to EEPROM. Volume is saved and restored.
 
 void store_tests( void );
-
 void readByte(void* adr);
 void readWord(void* adr, uint16_t* data);
 void writeWord(void* adr, uint16_t data);
 void eeprom_read(void* data, void* addr, size_t num);
 void eeprom_write(void* data, void* out, size_t num);
-<<<<<<< HEAD
-
-=======
 void store_settings(void);
 void restore_settings(void);
 
 extern struct eeprom_data eeprom;
->>>>>>> 011b8cc... Committing test for working volume written to EEPROM. Volume is saved and restored.
 #ifdef __cplusplus
 }
 #endif
