@@ -423,6 +423,7 @@ static void clock_menu_init()
 }
 
 /**
+ * Michael & Thierno
  * \fn time_btn_up
  * \brief raises the hours, minutes or seconds
  */
@@ -449,6 +450,7 @@ static void time_btn_up(struct menu* this)
 }
 
 /**
+ * Michael & Thierno
  * \fn time_btn_down
  * \brief decrease the hours, minutes or seconds
  */
@@ -478,6 +480,7 @@ static void time_btn_down(struct menu* this)
 }
 
 /**
+ * Michael & Thierno
  * \fn time_btn_left
  * \brief navigate between hours, minutes and seconds
  */
@@ -491,6 +494,7 @@ static void time_btn_left(struct menu* this)
 }
 
 /**
+ * Michael & Thierno
  * \fn time_btn_right
  * \brief navigate between hours, minutes and seconds
  */
@@ -504,6 +508,7 @@ static void time_btn_right(struct menu* this)
 }
 
 /**
+ * Michael & Thierno
  * \fn time_btn_ok
  * \brief save the hours, minutes and seconds
  */
@@ -729,6 +734,11 @@ static void set_alarm_time_menu()
         mnu->btn_ok = alarm_btn_ok;
 }
 
+/**
+ * Michael & Thierno
+ * \fn check_alarm
+ * \brief checks if the alarm is equal to the time
+ */
 void check_alarm()
 {
         char* tmp1 = getTime("00:00:00");
@@ -751,7 +761,8 @@ void check_alarm()
 }
 
 /**
- * \fn time_btn_ok
+ * Michael & Thierno
+ * \fn alarm_btn_ok
  * \brief save the hours, minutes and seconds
  */
 static void alarm_btn_ok(struct menu* this)
@@ -783,7 +794,8 @@ static void set_alarm_off(struct menu* this)
 }*/
 
 /**
- * \fn time_btn_up
+ * Michael & Thierno
+ * \fn alarm_btn_up
  * \brief raises the hours, minutes or seconds
  */
 static void alarm_btn_up(struct menu* this)
@@ -809,7 +821,8 @@ static void alarm_btn_up(struct menu* this)
 }
 
 /**
- * \fn time_btn_down
+ * Michael & Thierno
+ * \fn alarm_btn_down
  * \brief decrease the hours, minutes or seconds
  */
 static void alarm_btn_down(struct menu* this)
@@ -838,7 +851,8 @@ static void alarm_btn_down(struct menu* this)
 }
 
 /**
- * \fn time_btn_left
+ * Michael & Thierno
+ * \fn alarm_btn_left
  * \brief navigate between hours, minutes and seconds
  */
 static void alarm_btn_left(struct menu* this)
@@ -851,7 +865,8 @@ static void alarm_btn_left(struct menu* this)
 }
 
 /**
- * \fn time_btn_right
+ * Michael & Thierno
+ * \fn alarm_btn_right
  * \brief navigate between hours, minutes and seconds
  */
 static void alarm_btn_right(struct menu* this)
