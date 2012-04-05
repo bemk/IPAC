@@ -25,8 +25,6 @@ void x1205Init(void)
         TwInit(0);
         // 0 betekent dat wij master zijn, alle andere devices op de bus
         // zijn slaves.
-        // Optioneel:
-        //TwIOCtr(TWI_SETSPEED, &....);
         LogMsg_P(LOG_INFO, PSTR("x1205Init()"));
 }
 
@@ -99,6 +97,7 @@ char x1205ReadByte(unsigned char addr)
         return readBuffer[0];
 }
 
+//enable writing
 int x1205Enable(void)
 {
         u_char writeBuffer[5];
